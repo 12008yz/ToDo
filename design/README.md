@@ -10,7 +10,7 @@
 Файл `.fig` — только для Figma. Для разработки удобно экспортировать:
 
 - **PNG/WebP** — скриншоты экранов → `design/screens/`
-- **SVG** — иконки → `public/icons/` или `src/assets/icons/`
+- **SVG** — иконки → `public/navbar/`, `public/loginAndRegister/` (имена в kebab-case)
 - **Токены** — цвета, шрифты, отступы (Inspect / Dev Mode в Figma)
 
 ## Git

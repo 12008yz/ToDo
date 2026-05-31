@@ -25,13 +25,19 @@ npm run dev
 - [docs/TECHNICAL_SPECIFICATION.md](docs/TECHNICAL_SPECIFICATION.md) — страницы, блоки UI, бэкенд (JWT, Pomodoro)
 - [design/task-sync.fig](design/task-sync.fig) — макет Figma (экспорты экранов → `design/screens/`)
 
-## Структура `src/`
+## Структура проекта
 
 ```
-components/   # UI-компоненты
-types/        # Task, User, PomodoroSettings
-App.tsx       # Корневой компонент (временная заглушка)
+public/              # Статика (navbar/, loginAndRegister/, favicon.svg)
+src/
+  types/             # Task, User, PomodoroSettings (в user.ts)
+  App.tsx            # Корневой компонент (заглушка)
+  App.css, index.css
+design/              # Макет Figma (см. design/README.md)
+docs/                # Техническое задание
 ```
+
+Папку `src/components/` можно добавить по мере вёрстки экранов.
 
 ## Проверка перед коммитом
 
