@@ -1,15 +1,28 @@
+/* Оболочка: базовые стили для узкого экрана; отступы ≥ safe-area через max() */
 .app {
-  box-sizing: border-box;
+  width: 100%;
   min-height: 100vh;
+  min-height: 100dvh;
   margin: 0 auto;
-  max-width: 40rem;
-  padding: 2rem 1.25rem;
+  max-width: var(--app-max-width);
+  padding:
+    max(var(--page-padding-y), env(safe-area-inset-top, 0px))
+    max(var(--page-padding-x), env(safe-area-inset-right, 0px))
+    max(var(--page-padding-y), env(safe-area-inset-bottom, 0px))
+    max(var(--page-padding-x), env(safe-area-inset-left, 0px));
 }
 
 .app h1 {
   margin: 0 0 0.75rem;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 600;
+}
+
+/* 48rem — см. --breakpoint-tablet в index.css */
+@media (min-width: 48rem) {
+  .app h1 {
+    font-size: 1.75rem;
+  }
 }
 
 .app__hint {

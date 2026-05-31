@@ -23,6 +23,7 @@ npm run dev
 ## Документация
 
 - [docs/TECHNICAL_SPECIFICATION.md](docs/TECHNICAL_SPECIFICATION.md) — страницы, блоки UI, бэкенд (JWT, Pomodoro)
+- [design/task-sync.fig](design/task-sync.fig) — макет Figma (экспорты экранов → `design/screens/`)
 
 ## Структура `src/`
 

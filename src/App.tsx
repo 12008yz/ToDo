@@ -5,8 +5,9 @@ function App() {
     <main className="app">
       <h1>ToDo</h1>
       <p className="app__hint">
-        Приложение готово к разработке. Заполните{' '}
-        <code>docs/TECHNICAL_SPECIFICATION.md</code> по макету Figma.
+        Приложение готово к разработке. ТС:{' '}
+        <code>docs/TECHNICAL_SPECIFICATION.md</code>, макет:{' '}
+        <code>design/task-sync.fig</code>.
       </p>
     </main>
   )
