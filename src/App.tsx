@@ -13,20 +13,11 @@ function App() {
   return (
     <main className="app">
       <WelcomeLayout variant={isLogin ? 'login' : 'default'}>
-        <div className="welcome__screens">
-          <div
-            className={`welcome__screen${!isLogin ? ' welcome__screen--active' : ''}`}
-            aria-hidden={isLogin}
-          >
-            <OnboardingPage onStart={() => setPage('login')} />
-          </div>
-          <div
-            className={`welcome__screen${isLogin ? ' welcome__screen--active' : ''}`}
-            aria-hidden={!isLogin}
-          >
-            <LoginPage onRegistration={() => {}} />
-          </div>
-        </div>
+        {isLogin ? (
+          <LoginPage onRegistration={() => {}} />
+        ) : (
+          <OnboardingPage onStart={() => setPage('login')} />
+        )}
       </WelcomeLayout>
     </main>
   )
