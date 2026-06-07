@@ -1,4 +1,3 @@
-import { WelcomeLayout } from '../../components/WelcomeLayout'
 import { PrimaryButton } from '../../components/PrimaryButton'
 
 type OnboardingPageProps = {
@@ -7,7 +6,7 @@ type OnboardingPageProps = {
 
 export function OnboardingPage({ onStart }: OnboardingPageProps) {
   return (
-    <WelcomeLayout>
+    <>
       <h1 className="welcome__title">Task Sync</h1>
       <p className="welcome__description">
         <span className="welcome__description-line">
@@ -22,6 +21,6 @@ export function OnboardingPage({ onStart }: OnboardingPageProps) {
       </p>
 
       <PrimaryButton onClick={onStart}>Let&apos;s Start</PrimaryButton>
-    </WelcomeLayout>
+    </>
   )
 }

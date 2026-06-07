@@ -65,6 +65,7 @@ export function WelcomeLayout({ children, variant = 'default' }: WelcomeLayoutPr
             width={159}
             height={184}
             decoding="async"
+            fetchPriority="high"
             alt=""
           />
           <img
