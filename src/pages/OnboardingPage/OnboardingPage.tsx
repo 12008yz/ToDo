@@ -1,13 +1,13 @@
 import './OnboardingPage.css'
 
 const ILLUSTRATIONS = {
-  female: '/loginAndRegister/female-sitting-with-laptop.svg',
-  vase: '/loginAndRegister/vase-tulips-glasses-pencil.svg',
-  stopwatch: '/loginAndRegister/blue-stopwatch-pink-arrow.svg',
-  notifications: '/loginAndRegister/multicolored-smartphone-notifications.svg',
-  pieChart: '/loginAndRegister/pie-chart.svg',
-  coffee: '/loginAndRegister/pink-coffee-cup-close-up.svg',
-  calendar: '/loginAndRegister/blue-desk-calendar.svg',
+  female: '/loginAndRegister/female-sitting-with-laptop.png',
+  vase: '/loginAndRegister/vase-tulips-glasses-pencil.png',
+  stopwatch: '/loginAndRegister/blue-stopwatch-pink-arrow.png',
+  notifications: '/loginAndRegister/multicolored-smartphone-notifications.png',
+  pieChart: '/loginAndRegister/pie-chart.png',
+  coffee: '/loginAndRegister/pink-coffee-cup-close-up.png',
+  calendar: '/loginAndRegister/blue-desk-calendar.png',
 } as const
 
 function ArrowIcon() {
@@ -52,36 +52,57 @@ export function OnboardingPage() {
           <img
             className="onboarding__illustration onboarding__illustration--stopwatch"
             src={ILLUSTRATIONS.stopwatch}
+            width={40}
+            height={50}
+            decoding="async"
             alt=""
           />
           <img
             className="onboarding__illustration onboarding__illustration--calendar"
             src={ILLUSTRATIONS.calendar}
+            width={31}
+            height={28}
+            decoding="async"
             alt=""
           />
           <img
             className="onboarding__illustration onboarding__illustration--female"
             src={ILLUSTRATIONS.female}
+            width={159}
+            height={184}
+            decoding="async"
             alt=""
           />
           <img
             className="onboarding__illustration onboarding__illustration--pie"
             src={ILLUSTRATIONS.pieChart}
+            width={26}
+            height={26}
+            decoding="async"
             alt=""
           />
           <img
             className="onboarding__illustration onboarding__illustration--notifications"
             src={ILLUSTRATIONS.notifications}
+            width={62}
+            height={42}
+            decoding="async"
             alt=""
           />
           <img
             className="onboarding__illustration onboarding__illustration--vase"
             src={ILLUSTRATIONS.vase}
+            width={36}
+            height={52}
+            decoding="async"
             alt=""
           />
           <img
             className="onboarding__illustration onboarding__illustration--coffee"
             src={ILLUSTRATIONS.coffee}
+            width={18}
+            height={22}
+            decoding="async"
             alt=""
           />
         </div>
