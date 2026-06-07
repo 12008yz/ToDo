@@ -128,14 +128,14 @@ export function OnboardingPage() {
             project-wise conveniently!
           </span>
         </p>
-      </div>
 
-      <div className="onboarding__cta">
-        <span className="onboarding__button-shadow" aria-hidden="true" />
-        <button type="button" className="onboarding__button">
-          <span className="onboarding__button-label">Let&apos;s Start</span>
-          <ArrowIcon />
-        </button>
+        <div className="onboarding__cta">
+          <span className="onboarding__button-shadow" aria-hidden="true" />
+          <button type="button" className="onboarding__button">
+            <span className="onboarding__button-label">Let&apos;s Start</span>
+            <ArrowIcon />
+          </button>
+        </div>
       </div>
     </div>
   )

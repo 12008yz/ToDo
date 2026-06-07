@@ -16,7 +16,7 @@
   display: grid;
   grid-template-rows:
     minmax(0, calc(556 / var(--design-h) * 100%))
-    minmax(0, auto);
+    minmax(0, calc(256 / var(--design-h) * 100%));
   width: min(100%, 26.875rem);
   height: 100%;
   max-height: 100%;
@@ -244,6 +244,7 @@
 .onboarding__content {
   position: relative;
   z-index: 1;
+  height: 100%;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -326,12 +327,12 @@
 }
 
 .onboarding__cta {
-  position: absolute;
+  position: relative;
   z-index: 2;
-  left: calc(22 / var(--design-w) * 100%);
-  top: calc(687 / var(--design-h) * 100%);
-  width: calc(331 / var(--design-w) * 100%);
+  width: 100%;
   height: calc(52 / var(--design-w) * 100cqw);
+  margin-top: auto;
+  flex-shrink: 0;
   overflow: visible;
 }
 
