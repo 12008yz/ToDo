@@ -26,11 +26,6 @@
   container-name: welcome;
 }
 
-.welcome--login {
-  grid-template-rows:
-    minmax(0, calc(556 / var(--design-h) * 100%))
-    minmax(0, 1fr);
-}
 
 .welcome__blobs {
   position: absolute;
@@ -254,7 +249,8 @@
 }
 
 .welcome--login .welcome__content {
-  padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
+  display: block;
+  padding-bottom: max(1.6875rem, env(safe-area-inset-bottom, 0px));
 }
 
 @media (max-height: 46rem) {
@@ -310,9 +306,6 @@
   color: var(--color-black);
 }
 
-.welcome--login .welcome__title {
-  margin-bottom: 1.25rem;
-}
 
 .welcome__description {
   margin: 0 0 2.5rem;
