@@ -52,13 +52,14 @@
     0 0 0 2px rgba(95, 51, 225, 0.15);
 }
 
+/* Figma: 15px между полями и кнопкой Enter */
 .login__panel .welcome__cta {
-  margin-top: auto;
+  margin-top: 15px;
   flex-shrink: 0;
 }
 
 .login__link {
-  margin-top: 0.75rem;
+  margin-top: 1.75rem;
   padding: 0;
   border: none;
   background: none;
