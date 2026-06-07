@@ -159,7 +159,6 @@
   width: calc(62 / var(--design-w) * 100%);
   left: calc(245 / var(--design-w) * 100%);
   top: calc(225 / var(--hero-h) * 100%);
-  transform: scaleX(-1);
 }
 
 .onboarding__illustration--vase {
@@ -172,7 +171,6 @@
   width: calc(18 / var(--design-w) * 100%);
   left: calc(67 / var(--design-w) * 100%);
   top: calc(310 / var(--hero-h) * 100%);
-  transform: scaleX(-1);
 }
 
 /* --- Декоративные точки --- */
