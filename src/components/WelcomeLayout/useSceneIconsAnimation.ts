@@ -1,11 +1,10 @@
 import { useEffect, useRef, type RefObject } from 'react'
 import {
   FLOAT_ITEM_COUNT,
-  ICON_ITEM_DURATION_MS,
   ICON_ITEM_STAGGER_MS,
   ICON_TRANSITION_EASING,
-  ICON_TRANSITION_MS,
   ICON_TRAVEL_PX,
+  getIconItemDurationMs,
   type IconAnimationPhase,
   type IconTransition,
 } from '../../constants/transitions'
@@ -30,6 +29,17 @@ function getDelayMs(index: number, phase: IconAnimationPhase): number {
   }
 
   return (FLOAT_ITEM_COUNT - 1 - index) * ICON_ITEM_STAGGER_MS
+}
+
+function getMaxTransitionMs(phase: IconAnimationPhase): number {
+  let maxFinish = 0
+  for (let index = 0; index < FLOAT_ITEM_COUNT; index++) {
+    maxFinish = Math.max(
+      maxFinish,
+      getDelayMs(index, phase) + getIconItemDurationMs(index),
+    )
+  }
+  return maxFinish
 }
 
 function setTransform(element: HTMLElement, y: number) {
@@ -85,7 +95,8 @@ function animateItemY(
   delayTimer = window.setTimeout(() => {
     if (cancelled || runId !== getRunId()) return
 
-    const transition = `transform ${ICON_ITEM_DURATION_MS}ms ${ICON_TRANSITION_EASING}`
+    const durationMs = getIconItemDurationMs(index)
+    const transition = `transform ${durationMs}ms ${ICON_TRANSITION_EASING}`
     element.style.transition = transition
     element.style.webkitTransition = transition
     setTransform(element, toY)
@@ -147,7 +158,7 @@ export function useSceneIconsAnimation({
       itemAnimations = items.map((item, index) =>
         animateItemY(item, index, phase, runId, () => runIdRef.current),
       )
-      finishTimer = window.setTimeout(finish, ICON_TRANSITION_MS + 100)
+      finishTimer = window.setTimeout(finish, getMaxTransitionMs(phase) + 100)
     }
 
     const tryStart = (attempt = 0) => {
