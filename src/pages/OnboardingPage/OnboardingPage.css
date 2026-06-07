@@ -4,6 +4,10 @@
   --design-w: 375;
   --design-h: 812;
   --hero-h: 556;
+  --btn-w: 331;
+  --btn-h: 52;
+  --btn-radius: 14;
+  --btn-arc: 4;
   --color-primary: #5f33e1;
   --color-black: #24252c;
   --color-secondary: #6e6a7c;
@@ -227,6 +231,14 @@
   background: #a4e7f9;
 }
 
+.onboarding__svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 /* --- Текст и кнопка: y=556–812 в макете --- */
 
 .onboarding__content {
@@ -272,9 +284,6 @@
     padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
   }
 
-  .onboarding__button {
-    height: 3rem;
-  }
 }
 
 @media (max-height: 43.75rem) {
@@ -317,9 +326,12 @@
 }
 
 .onboarding__cta {
-  position: relative;
-  width: 100%;
-  padding-bottom: 0.75rem;
+  position: absolute;
+  z-index: 2;
+  left: calc(22 / var(--design-w) * 100%);
+  top: calc(687 / var(--design-h) * 100%);
+  width: calc(331 / var(--design-w) * 100%);
+  height: calc(52 / var(--design-w) * 100cqw);
   overflow: visible;
 }
 
@@ -338,12 +350,12 @@
   position: relative;
   display: block;
   width: 100%;
-  height: clamp(3rem, 13.87cqw, 3.25rem);
+  height: 100%;
   padding: 0;
   border: none;
-  border-radius: 0.875rem;
+  border-radius: calc(var(--btn-radius) / var(--design-w) * 100cqw);
   background: var(--color-primary);
-  box-shadow: 0 12px 30px rgba(95, 51, 225, 0.35);
+  clip-path: url(#onboarding-button-shape);
   cursor: pointer;
   transition: opacity 0.15s ease;
 }

@@ -32,6 +32,13 @@ function ArrowIcon() {
 export function OnboardingPage() {
   return (
     <div className="onboarding">
+      <svg className="onboarding__svg-defs" aria-hidden="true" width="0" height="0">
+        <defs>
+          <clipPath id="onboarding-button-shape" clipPathUnits="objectBoundingBox">
+            <path d="M 0 0.2692 A 0.0423 0.2692 0 0 1 0.0423 0.0769 Q 0.5 0 0.9577 0.0769 A 0.0423 0.2692 0 0 1 1 0.2692 L 1 0.7308 A 0.0423 0.2692 0 0 1 0.9577 0.9231 Q 0.5 1 0.0423 0.9231 A 0.0423 0.2692 0 0 1 0 0.7308 Z" />
+          </clipPath>
+        </defs>
+      </svg>
       <div className="onboarding__blobs" aria-hidden="true">
         <span className="onboarding__blob onboarding__blob--green" />
         <span className="onboarding__blob onboarding__blob--yellow-top" />
@@ -121,14 +128,14 @@ export function OnboardingPage() {
             project-wise conveniently!
           </span>
         </p>
+      </div>
 
-        <div className="onboarding__cta">
-          <span className="onboarding__button-shadow" aria-hidden="true" />
-          <button type="button" className="onboarding__button">
-            <span className="onboarding__button-label">Let&apos;s Start</span>
-            <ArrowIcon />
-          </button>
-        </div>
+      <div className="onboarding__cta">
+        <span className="onboarding__button-shadow" aria-hidden="true" />
+        <button type="button" className="onboarding__button">
+          <span className="onboarding__button-label">Let&apos;s Start</span>
+          <ArrowIcon />
+        </button>
       </div>
     </div>
   )
