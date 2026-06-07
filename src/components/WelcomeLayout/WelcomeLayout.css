@@ -36,12 +36,6 @@
   container-type: normal;
 }
 
-/* blur на iOS сильно лагает во время transform-анимаций */
-.welcome--animating-icons .welcome__blobs {
-  opacity: 0;
-  visibility: hidden;
-}
-
 .welcome--animating-icons .welcome__hero {
   isolation: isolate;
 }
@@ -56,6 +50,7 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  transform: none;
 }
 
 .welcome__blob {
