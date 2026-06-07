@@ -1,36 +1,15 @@
-/* Оболочка: базовые стили для узкого экрана; отступы ≥ safe-area через max() */
+/* Оболочка приложения: full-bleed на мобиле, центрирование на широких экранах */
 .app {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100dvh;
+  max-height: 100dvh;
   margin: 0 auto;
-  max-width: var(--app-max-width);
+  overflow: hidden;
   padding:
-    max(var(--page-padding-y), env(safe-area-inset-top, 0px))
-    max(var(--page-padding-x), env(safe-area-inset-right, 0px))
-    max(var(--page-padding-y), env(safe-area-inset-bottom, 0px))
-    max(var(--page-padding-x), env(safe-area-inset-left, 0px));
-}
-
-.app h1 {
-  margin: 0 0 0.75rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-/* 48rem — см. --breakpoint-tablet в index.css */
-@media (min-width: 48rem) {
-  .app h1 {
-    font-size: 1.75rem;
-  }
-}
-
-.app__hint {
-  margin: 0;
-  color: #5c5c5c;
-  line-height: 1.5;
-}
-
-.app__hint code {
-  font-size: 0.9em;
+    env(safe-area-inset-top, 0px)
+    env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px)
+    env(safe-area-inset-left, 0px);
 }

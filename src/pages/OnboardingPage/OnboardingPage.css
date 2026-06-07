@@ -1,0 +1,351 @@
+/* Макет Figma: 375×812. Вертикальная сетка и позиции — по координатам артборда. */
+
+.onboarding {
+  --design-w: 375;
+  --design-h: 812;
+  --hero-h: 556;
+  --color-primary: #5f33e1;
+  --color-black: #24252c;
+  --color-secondary: #6e6a7c;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  max-height: 100%;
+  background: #ffffff;
+  overflow: hidden;
+  container-type: size;
+  container-name: onboarding;
+}
+
+/* Планшет/десктоп: узкая колонка как на телефоне */
+@media (min-width: 30rem) {
+  .onboarding {
+    max-width: 26.875rem;
+    margin-inline: auto;
+  }
+}
+
+/* --- Фоновые блобы (координаты от всей страницы 812) --- */
+
+.onboarding__blobs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.onboarding__scene-blobs {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.onboarding__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+}
+
+.onboarding__blob--green {
+  width: calc(70 / var(--design-w) * 100%);
+  aspect-ratio: 1;
+  left: calc(-15 / var(--design-w) * 100%);
+  top: calc(126 / var(--hero-h) * 100%);
+  background: linear-gradient(
+    180deg,
+    #46f080 0%,
+    rgba(70, 240, 138, 0.15) 100%
+  );
+}
+
+.onboarding__blob--yellow-top {
+  width: calc(70 / var(--design-w) * 100%);
+  aspect-ratio: 1;
+  left: calc(263 / var(--design-w) * 100%);
+  top: 0;
+  background: linear-gradient(
+    180deg,
+    #edf046 0%,
+    rgba(240, 233, 70, 0.15) 100%
+  );
+}
+
+.onboarding__blob--blue-right {
+  width: calc(60 / var(--design-w) * 100%);
+  aspect-ratio: 1;
+  left: calc(333 / var(--design-w) * 100%);
+  top: calc(232 / var(--hero-h) * 100%);
+  background: linear-gradient(
+    180deg,
+    #2555ff 0%,
+    rgba(37, 85, 255, 0.25) 100%
+  );
+}
+
+.onboarding__blob--cyan {
+  width: calc(58 / var(--design-w) * 100%);
+  aspect-ratio: 1;
+  left: calc(76 / var(--design-w) * 100%);
+  top: calc(424 / var(--hero-h) * 100%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    #46bdf0 0%,
+    rgba(70, 189, 240, 0.65) 45%,
+    rgba(70, 189, 240, 0.25) 100%
+  );
+  filter: blur(45px);
+}
+
+.onboarding__blob--yellow-bottom {
+  width: calc(58 / var(--design-w) * 100%);
+  aspect-ratio: 1;
+  left: calc(240 / var(--design-w) * 100%);
+  top: calc(767 / var(--design-h) * 100%);
+  background: linear-gradient(
+    180deg,
+    #f0b646 0%,
+    rgba(240, 203, 70, 0.15) 100%
+  );
+}
+
+/* --- Иллюстрации: блок 0–556px в макете --- */
+
+.onboarding__hero {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 0;
+  width: 100%;
+  min-height: 0;
+  max-height: calc(var(--hero-h) * 1px);
+}
+
+.onboarding__scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.onboarding__illustration {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.onboarding__illustration--female {
+  width: calc(159 / var(--design-w) * 100%);
+  left: calc(131 / var(--design-w) * 100%);
+  top: calc(147 / var(--hero-h) * 100%);
+}
+
+.onboarding__illustration--stopwatch {
+  width: calc(40 / var(--design-w) * 100%);
+  left: calc(104 / var(--design-w) * 100%);
+  top: calc(69 / var(--hero-h) * 100%);
+}
+
+.onboarding__illustration--calendar {
+  width: calc(31.35 / var(--design-w) * 100%);
+  left: calc(276 / var(--design-w) * 100%);
+  top: calc(136 / var(--hero-h) * 100%);
+  transform: rotate(12.86deg);
+}
+
+.onboarding__illustration--pie {
+  width: calc(26 / var(--design-w) * 100%);
+  left: calc(84 / var(--design-w) * 100%);
+  top: calc(180 / var(--hero-h) * 100%);
+}
+
+.onboarding__illustration--notifications {
+  width: calc(62 / var(--design-w) * 100%);
+  left: calc(245 / var(--design-w) * 100%);
+  top: calc(225 / var(--hero-h) * 100%);
+  transform: scaleX(-1);
+}
+
+.onboarding__illustration--vase {
+  width: calc(36 / var(--design-w) * 100%);
+  left: calc(79 / var(--design-w) * 100%);
+  top: calc(279 / var(--hero-h) * 100%);
+}
+
+.onboarding__illustration--coffee {
+  width: calc(18 / var(--design-w) * 100%);
+  left: calc(67 / var(--design-w) * 100%);
+  top: calc(310 / var(--hero-h) * 100%);
+  transform: scaleX(-1);
+}
+
+/* --- Декоративные точки --- */
+
+.onboarding__dot {
+  position: absolute;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.onboarding__dot--8 {
+  width: calc(8 / var(--design-w) * 100%);
+  aspect-ratio: 1;
+}
+
+.onboarding__dot--4 {
+  width: calc(4 / var(--design-w) * 100%);
+  aspect-ratio: 1;
+}
+
+.onboarding__dot--blue {
+  left: calc(252 / var(--design-w) * 100%);
+  top: calc(73 / var(--hero-h) * 100%);
+  background: #92deff;
+}
+
+.onboarding__dot--purple {
+  left: calc(202 / var(--design-w) * 100%);
+  top: calc(92 / var(--hero-h) * 100%);
+  background: #be9fff;
+}
+
+.onboarding__dot--yellow {
+  left: calc(250 / var(--design-w) * 100%);
+  top: calc(383 / var(--hero-h) * 100%);
+  background: #eaed2a;
+}
+
+.onboarding__dot--green {
+  left: calc(281 / var(--design-w) * 100%);
+  top: calc(362 / var(--hero-h) * 100%);
+  background: #7ffcaa;
+}
+
+.onboarding__dot--pink {
+  left: calc(138 / var(--design-w) * 100%);
+  top: calc(391 / var(--hero-h) * 100%);
+  background: #ffd7e4;
+}
+
+.onboarding__dot--sky {
+  left: calc(176 / var(--design-w) * 100%);
+  top: calc(405 / var(--hero-h) * 100%);
+  background: #a4e7f9;
+}
+
+/* --- Текст и кнопка: y=556–812 в макете --- */
+
+.onboarding__content {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding:
+    0
+    calc(22 / var(--design-w) * 100%)
+    max(4.5625rem, env(safe-area-inset-bottom, 0px));
+}
+
+/* Короткие экраны (Galaxy S8+, iPhone SE) */
+@media (max-height: 43.75rem) {
+  .onboarding__content {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .onboarding__title {
+    margin-bottom: 0.25rem;
+  }
+
+  .onboarding__description {
+    margin-bottom: 1.25rem;
+  }
+}
+
+.onboarding__title {
+  margin: 0 0 0.4375rem;
+  font-family: 'Lexend Deca', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.25rem, 6.4cqw, 1.75rem);
+  line-height: calc(30 / 24);
+  text-align: center;
+  color: var(--color-black);
+}
+
+.onboarding__description {
+  margin: 0 0 2.5rem;
+  width: calc(266 / var(--design-w) * 100%);
+  max-width: 16.625rem;
+  font-family: 'Lexend Deca', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(0.8125rem, 3.73cqw, 1rem);
+  line-height: calc(18 / 14);
+  text-align: center;
+  color: var(--color-secondary);
+}
+
+.onboarding__cta {
+  position: relative;
+  width: 100%;
+}
+
+.onboarding__button-shadow {
+  position: absolute;
+  left: calc(12 / 331 * 100%);
+  right: calc(12 / 331 * 100%);
+  bottom: -0.75rem;
+  height: 7px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  filter: blur(15px);
+}
+
+.onboarding__button {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: clamp(3rem, 13.87cqw, 3.25rem);
+  padding: 0;
+  border: none;
+  border-radius: 0.875rem;
+  background: var(--color-primary);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.onboarding__button:hover {
+  opacity: 0.92;
+}
+
+.onboarding__button:active {
+  opacity: 0.85;
+}
+
+.onboarding__button-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: 'Lexend Deca', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: clamp(1rem, 5.07cqw, 1.1875rem);
+  line-height: calc(24 / 19);
+  color: #ffffff;
+}
+
+.onboarding__button-arrow {
+  position: absolute;
+  top: 50%;
+  right: calc(22 / 331 * 100%);
+  width: 18px;
+  height: 12px;
+  transform: translateY(-50%);
+}
