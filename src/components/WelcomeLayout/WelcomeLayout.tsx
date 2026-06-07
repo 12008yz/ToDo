@@ -1,4 +1,6 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { ReactNode } from 'react'
+import type { IconAnimationPhase, IconTransition } from '../../constants/transitions'
+import { useSceneIconsAnimation } from './useSceneIconsAnimation'
 import './WelcomeLayout.css'
 
 const ILLUSTRATIONS = {
@@ -11,17 +13,14 @@ const ILLUSTRATIONS = {
   calendar: '/loginAndRegister/blue-desk-calendar.png',
 } as const
 
-export type IconTransition = 'idle' | 'exit-up' | 'pre-enter' | 'enter-from-bottom'
+export type { IconTransition }
 
 type WelcomeLayoutProps = {
   children: ReactNode
   variant?: 'default' | 'login'
   iconTransition?: IconTransition
   contentHidden?: boolean
-}
-
-function itemStyle(index: number): CSSProperties {
-  return { '--item-index': index } as CSSProperties
+  onIconsAnimationComplete?: (phase: IconAnimationPhase) => void
 }
 
 export function WelcomeLayout({
@@ -29,15 +28,12 @@ export function WelcomeLayout({
   variant = 'default',
   iconTransition = 'idle',
   contentHidden = false,
+  onIconsAnimationComplete,
 }: WelcomeLayoutProps) {
-  const sceneClassName = [
-    'welcome__scene',
-    iconTransition === 'exit-up' ? 'welcome__scene--icons-exit' : '',
-    iconTransition === 'pre-enter' ? 'welcome__scene--icons-pre-enter' : '',
-    iconTransition === 'enter-from-bottom' ? 'welcome__scene--icons-enter' : '',
-  ]
-    .filter(Boolean)
-    .join(' ')
+  const sceneRef = useSceneIconsAnimation({
+    iconTransition,
+    onAnimationComplete: onIconsAnimationComplete,
+  })
 
   const contentClassName = [
     'welcome__content',
@@ -64,10 +60,10 @@ export function WelcomeLayout({
       </div>
 
       <div className="welcome__hero">
-        <div className={sceneClassName} aria-hidden="true">
+        <div ref={sceneRef} className="welcome__scene" aria-hidden="true">
           <img
             className="welcome__illustration welcome__scene-item welcome__illustration--stopwatch"
-            style={itemStyle(0)}
+            data-item-index={0}
             src={ILLUSTRATIONS.stopwatch}
             width={40}
             height={50}
@@ -76,15 +72,15 @@ export function WelcomeLayout({
           />
           <span
             className="welcome__dot welcome__dot--8 welcome__dot--blue welcome__scene-item"
-            style={itemStyle(1)}
+            data-item-index={1}
           />
           <span
             className="welcome__dot welcome__dot--4 welcome__dot--purple welcome__scene-item"
-            style={itemStyle(2)}
+            data-item-index={2}
           />
           <img
             className="welcome__illustration welcome__scene-item welcome__illustration--calendar"
-            style={itemStyle(3)}
+            data-item-index={3}
             src={ILLUSTRATIONS.calendar}
             width={31}
             height={28}
@@ -93,7 +89,7 @@ export function WelcomeLayout({
           />
           <img
             className="welcome__illustration welcome__scene-item welcome__illustration--pie"
-            style={itemStyle(4)}
+            data-item-index={4}
             src={ILLUSTRATIONS.pieChart}
             width={26}
             height={26}
@@ -102,7 +98,7 @@ export function WelcomeLayout({
           />
           <img
             className="welcome__illustration welcome__scene-item welcome__illustration--notifications"
-            style={itemStyle(5)}
+            data-item-index={5}
             src={ILLUSTRATIONS.notifications}
             width={62}
             height={42}
@@ -120,7 +116,7 @@ export function WelcomeLayout({
           />
           <img
             className="welcome__illustration welcome__scene-item welcome__illustration--vase"
-            style={itemStyle(6)}
+            data-item-index={6}
             src={ILLUSTRATIONS.vase}
             width={36}
             height={52}
@@ -129,7 +125,7 @@ export function WelcomeLayout({
           />
           <img
             className="welcome__illustration welcome__scene-item welcome__illustration--coffee"
-            style={itemStyle(7)}
+            data-item-index={7}
             src={ILLUSTRATIONS.coffee}
             width={18}
             height={22}
@@ -138,19 +134,19 @@ export function WelcomeLayout({
           />
           <span
             className="welcome__dot welcome__dot--4 welcome__dot--green welcome__scene-item"
-            style={itemStyle(8)}
+            data-item-index={8}
           />
           <span
             className="welcome__dot welcome__dot--8 welcome__dot--yellow welcome__scene-item"
-            style={itemStyle(9)}
+            data-item-index={9}
           />
           <span
             className="welcome__dot welcome__dot--8 welcome__dot--pink welcome__scene-item"
-            style={itemStyle(10)}
+            data-item-index={10}
           />
           <span
             className="welcome__dot welcome__dot--4 welcome__dot--sky welcome__scene-item"
-            style={itemStyle(11)}
+            data-item-index={11}
           />
         </div>
       </div>

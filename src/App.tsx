@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
-import { WelcomeLayout, type IconTransition } from './components/WelcomeLayout'
+import { useCallback, useState } from 'react'
+import { WelcomeLayout } from './components/WelcomeLayout'
 import { OnboardingPage } from './pages/OnboardingPage'
 import { LoginPage } from './pages/LoginPage'
-import { ICON_TRANSITION_MS } from './constants/transitions'
+import type { IconAnimationPhase, IconTransition } from './constants/transitions'
 import './App.css'
 
 type AppPage = 'onboarding' | 'login'
-type TransitionPhase = 'idle' | 'exiting' | 'pre-enter' | 'entering-icons'
+type TransitionPhase = 'idle' | 'exiting' | 'entering-icons'
 
 function App() {
   const [page, setPage] = useState<AppPage>('onboarding')
@@ -20,44 +20,22 @@ function App() {
     setTransitionPhase('exiting')
   }
 
-  useEffect(() => {
-    if (transitionPhase === 'exiting') {
-      const timer = window.setTimeout(() => {
-        setPage('login')
-        setTransitionPhase('pre-enter')
-      }, ICON_TRANSITION_MS)
-      return () => window.clearTimeout(timer)
+  const handleIconsAnimationComplete = useCallback((phase: IconAnimationPhase) => {
+    if (phase === 'exit') {
+      setPage('login')
+      setTransitionPhase('entering-icons')
+      return
     }
 
-    if (transitionPhase === 'pre-enter') {
-      let raf2 = 0
-      const raf1 = requestAnimationFrame(() => {
-        raf2 = requestAnimationFrame(() => {
-          setTransitionPhase('entering-icons')
-        })
-      })
-      return () => {
-        cancelAnimationFrame(raf1)
-        cancelAnimationFrame(raf2)
-      }
-    }
-
-    if (transitionPhase === 'entering-icons') {
-      const timer = window.setTimeout(() => {
-        setTransitionPhase('idle')
-      }, ICON_TRANSITION_MS)
-      return () => window.clearTimeout(timer)
-    }
-  }, [transitionPhase])
+    setTransitionPhase('idle')
+  }, [])
 
   const iconTransition: IconTransition =
     transitionPhase === 'exiting'
       ? 'exit-up'
-      : transitionPhase === 'pre-enter'
-        ? 'pre-enter'
-        : transitionPhase === 'entering-icons'
-          ? 'enter-from-bottom'
-          : 'idle'
+      : transitionPhase === 'entering-icons'
+        ? 'enter-from-bottom'
+        : 'idle'
 
   const contentHidden = transitionPhase === 'exiting'
 
@@ -71,6 +49,7 @@ function App() {
         variant={isLogin ? 'login' : 'default'}
         iconTransition={iconTransition}
         contentHidden={contentHidden}
+        onIconsAnimationComplete={handleIconsAnimationComplete}
       >
         {isLogin ? (
           <LoginPage showContent={showLoginContent} onRegistration={() => {}} />
