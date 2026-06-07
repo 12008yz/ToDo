@@ -33,18 +33,15 @@ export function OnboardingPage() {
   return (
     <div className="onboarding">
       <div className="onboarding__blobs" aria-hidden="true">
+        <span className="onboarding__blob onboarding__blob--green" />
+        <span className="onboarding__blob onboarding__blob--yellow-top" />
+        <span className="onboarding__blob onboarding__blob--blue-right" />
+        <span className="onboarding__blob onboarding__blob--cyan" />
         <span className="onboarding__blob onboarding__blob--yellow-bottom" />
       </div>
 
       <div className="onboarding__hero">
         <div className="onboarding__scene" aria-hidden="true">
-          <div className="onboarding__scene-blobs">
-            <span className="onboarding__blob onboarding__blob--green" />
-            <span className="onboarding__blob onboarding__blob--yellow-top" />
-            <span className="onboarding__blob onboarding__blob--blue-right" />
-            <span className="onboarding__blob onboarding__blob--cyan" />
-          </div>
-
           <span className="onboarding__dot onboarding__dot--8 onboarding__dot--blue" />
           <span className="onboarding__dot onboarding__dot--4 onboarding__dot--purple" />
           <span className="onboarding__dot onboarding__dot--8 onboarding__dot--yellow" />

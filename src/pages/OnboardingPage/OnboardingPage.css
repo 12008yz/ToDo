@@ -1,4 +1,4 @@
-/* Макет Figma: 375×812. Вертикальная сетка и позиции — по координатам артборда. */
+/* Макет Figma: 375×812. Вертикальная сетка 556 + 256. */
 
 .onboarding {
   --design-w: 375;
@@ -9,25 +9,18 @@
   --color-secondary: #6e6a7c;
 
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
-  width: 100%;
-  min-height: 0;
+  display: grid;
+  grid-template-rows:
+    minmax(0, calc(556 / var(--design-h) * 100%))
+    minmax(0, auto);
+  width: min(100%, 26.875rem);
+  height: 100%;
   max-height: 100%;
+  margin-inline: auto;
   background: #ffffff;
-  overflow: hidden;
-  container-type: size;
+  overflow: clip;
+  container-type: inline-size;
   container-name: onboarding;
-}
-
-/* Планшет/десктоп: узкая колонка как на телефоне */
-@media (min-width: 30rem) {
-  .onboarding {
-    max-width: 26.875rem;
-    margin-inline: auto;
-  }
 }
 
 /* --- Фоновые блобы (координаты от всей страницы 812) --- */
@@ -37,13 +30,6 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
-}
-
-.onboarding__scene-blobs {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
 }
 
 .onboarding__blob {
@@ -56,7 +42,7 @@
   width: calc(70 / var(--design-w) * 100%);
   aspect-ratio: 1;
   left: calc(-15 / var(--design-w) * 100%);
-  top: calc(126 / var(--hero-h) * 100%);
+  top: calc(126 / var(--design-h) * 100%);
   background: linear-gradient(
     180deg,
     #46f080 0%,
@@ -80,7 +66,7 @@
   width: calc(60 / var(--design-w) * 100%);
   aspect-ratio: 1;
   left: calc(333 / var(--design-w) * 100%);
-  top: calc(232 / var(--hero-h) * 100%);
+  top: calc(232 / var(--design-h) * 100%);
   background: linear-gradient(
     180deg,
     #2555ff 0%,
@@ -92,7 +78,7 @@
   width: calc(58 / var(--design-w) * 100%);
   aspect-ratio: 1;
   left: calc(76 / var(--design-w) * 100%);
-  top: calc(424 / var(--hero-h) * 100%);
+  top: calc(424 / var(--design-h) * 100%);
   background: radial-gradient(
     circle at 50% 50%,
     #46bdf0 0%,
@@ -106,7 +92,8 @@
   width: calc(58 / var(--design-w) * 100%);
   aspect-ratio: 1;
   left: calc(240 / var(--design-w) * 100%);
-  top: calc(767 / var(--design-h) * 100%);
+  top: auto;
+  bottom: calc(45 / var(--design-h) * 100%);
   background: linear-gradient(
     180deg,
     #f0b646 0%,
@@ -119,22 +106,18 @@
 .onboarding__hero {
   position: relative;
   z-index: 1;
-  flex: 1 1 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  width: 100%;
   min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 }
 
-/* Единый масштаб 375×556: иллюстрации и точки не расходятся на реальных телефонах */
 .onboarding__scene {
   position: relative;
+  flex: 0 0 auto;
   width: 100%;
-  max-width: 100%;
-  max-height: 100%;
   aspect-ratio: 375 / 556;
-  height: auto;
 }
 
 .onboarding__illustration {
@@ -251,17 +234,51 @@
 .onboarding__content {
   position: relative;
   z-index: 1;
-  flex: 0 0 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   padding:
     0
     calc(22 / var(--design-w) * 100%)
     max(4.5625rem, env(safe-area-inset-bottom, 0px));
 }
 
-/* Короткие экраны (Galaxy S8+, iPhone SE) */
+/* Короткие экраны: hero сжимается, фон остаётся на всю страницу */
+@media (max-height: 46rem) {
+  .onboarding {
+    grid-template-rows: minmax(0, 1fr) minmax(0, auto);
+  }
+
+  .onboarding__content {
+    padding-bottom: max(2.5rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .onboarding__description {
+    margin-bottom: 1.75rem;
+  }
+}
+
+@media (max-height: 32.5rem) {
+  .onboarding__title {
+    font-size: 1.25rem;
+  }
+
+  .onboarding__description {
+    margin-bottom: 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .onboarding__content {
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .onboarding__button {
+    height: 3rem;
+  }
+}
+
 @media (max-height: 43.75rem) {
   .onboarding__content {
     padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
@@ -301,6 +318,8 @@
 .onboarding__cta {
   position: relative;
   width: 100%;
+  padding-bottom: 0.75rem;
+  overflow: visible;
 }
 
 .onboarding__button-shadow {
@@ -323,6 +342,7 @@
   border: none;
   border-radius: 0.875rem;
   background: var(--color-primary);
+  box-shadow: 0 12px 30px rgba(95, 51, 225, 0.35);
   cursor: pointer;
   transition: opacity 0.15s ease;
 }
