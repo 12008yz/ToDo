@@ -1,6 +1,7 @@
 import { useEffect, useRef, type RefObject } from 'react'
 import {
   FLOAT_ITEM_COUNT,
+  ICON_ITEM_DURATION_MS,
   ICON_ITEM_STAGGER_MS,
   ICON_TRANSITION_EASING,
   ICON_TRAVEL_PX,
@@ -24,11 +25,19 @@ function getItems(ref: RefObject<(HTMLDivElement | null)[]>): HTMLDivElement[] {
 }
 
 function getDelayMs(index: number, phase: IconAnimationPhase): number {
-  if (phase === 'exit') {
-    return index * ICON_ITEM_STAGGER_MS
+  if (phase === 'enter') {
+    return 0
   }
 
-  return (FLOAT_ITEM_COUNT - 1 - index) * ICON_ITEM_STAGGER_MS
+  return index * ICON_ITEM_STAGGER_MS
+}
+
+function getItemDurationMs(index: number, phase: IconAnimationPhase): number {
+  if (phase === 'enter') {
+    return ICON_ITEM_DURATION_MS
+  }
+
+  return getIconItemDurationMs(index)
 }
 
 function getMaxTransitionMs(phase: IconAnimationPhase): number {
@@ -36,7 +45,7 @@ function getMaxTransitionMs(phase: IconAnimationPhase): number {
   for (let index = 0; index < FLOAT_ITEM_COUNT; index++) {
     maxFinish = Math.max(
       maxFinish,
-      getDelayMs(index, phase) + getIconItemDurationMs(index),
+      getDelayMs(index, phase) + getItemDurationMs(index, phase),
     )
   }
   return maxFinish
@@ -95,7 +104,7 @@ function animateItemY(
   delayTimer = window.setTimeout(() => {
     if (cancelled || runId !== getRunId()) return
 
-    const durationMs = getIconItemDurationMs(index)
+    const durationMs = getItemDurationMs(index, phase)
     const transition = `transform ${durationMs}ms ${ICON_TRANSITION_EASING}`
     element.style.transition = transition
     element.style.webkitTransition = transition
@@ -116,6 +125,13 @@ export function useSceneIconsAnimation({
   onCompleteRef.current = onAnimationComplete
 
   useEffect(() => {
+    if (iconTransition === 'idle') {
+      for (const item of getItems(sceneItemsRef)) {
+        clearMotionStyles(item)
+      }
+      return
+    }
+
     const phase: IconAnimationPhase | null =
       iconTransition === 'exit-up'
         ? 'exit'
@@ -134,13 +150,6 @@ export function useSceneIconsAnimation({
 
     const finish = () => {
       if (runId !== runIdRef.current) return
-
-      if (phase === 'enter') {
-        for (const item of getItems(sceneItemsRef)) {
-          clearMotionStyles(item)
-        }
-      }
-
       onCompleteRef.current?.(phase)
     }
 
