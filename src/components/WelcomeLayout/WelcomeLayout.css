@@ -10,10 +10,10 @@
   --color-primary: #5f33e1;
   --color-black: #24252c;
   --color-secondary: #6e6a7c;
-  --icon-item-duration: 820ms;
-  --icon-item-stagger: 110ms;
+  --icon-item-duration: 900ms;
+  --icon-item-stagger: 125ms;
   --float-item-count: 12;
-  --icon-transition-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --icon-transition-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --content-transition-duration: 350ms;
   --icon-travel: 120vh;
 
@@ -34,6 +34,21 @@
 
 .welcome--animating-icons {
   container-type: normal;
+}
+
+/* blur на iOS сильно лагает во время transform-анимаций */
+.welcome--animating-icons .welcome__blobs {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.welcome--animating-icons .welcome__hero {
+  isolation: isolate;
+}
+
+.welcome--animating-icons .welcome__scene {
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 .welcome__blobs {
@@ -154,7 +169,14 @@
 }
 
 .welcome__scene-item[data-motion-active] {
-  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000px;
+  perspective: 1000px;
+}
+
+.welcome__scene-item[data-motion-active] .welcome__illustration,
+.welcome__scene-item[data-motion-active] .welcome__dot {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }

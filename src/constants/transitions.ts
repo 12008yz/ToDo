@@ -1,7 +1,8 @@
-export const ICON_ITEM_DURATION_MS = 820
-export const ICON_ITEM_STAGGER_MS = 110
+export const ICON_ITEM_DURATION_MS = 900
+export const ICON_ITEM_STAGGER_MS = 125
 export const FLOAT_ITEM_COUNT = 12
 export const ICON_TRAVEL_PX = 600
+export const ICON_TRANSITION_EASING = 'cubic-bezier(0.22, 1, 0.36, 1)'
 
 export const ICON_TRANSITION_MS =
   (FLOAT_ITEM_COUNT - 1) * ICON_ITEM_STAGGER_MS + ICON_ITEM_DURATION_MS

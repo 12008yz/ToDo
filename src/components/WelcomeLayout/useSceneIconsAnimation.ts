@@ -3,6 +3,7 @@ import {
   FLOAT_ITEM_COUNT,
   ICON_ITEM_DURATION_MS,
   ICON_ITEM_STAGGER_MS,
+  ICON_TRANSITION_EASING,
   ICON_TRANSITION_MS,
   ICON_TRAVEL_PX,
   type IconAnimationPhase,
@@ -19,8 +20,6 @@ type ItemAnimation = {
   cancel: () => void
 }
 
-const EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
-
 function getItems(ref: RefObject<(HTMLDivElement | null)[]>): HTMLDivElement[] {
   return (ref.current ?? []).filter((item): item is HTMLDivElement => item != null)
 }
@@ -34,16 +33,26 @@ function getDelayMs(index: number, phase: IconAnimationPhase): number {
 }
 
 function setTransform(element: HTMLElement, y: number) {
-  const value = `translate3d(0, ${y}px, 0)`
+  const value = `translate3d(0, ${y}px, 0.01px)`
   element.style.transform = value
   element.style.webkitTransform = value
 }
 
 function clearMotionStyles(element: HTMLElement) {
   element.style.transition = ''
+  element.style.webkitTransition = ''
   element.style.transform = ''
   element.style.webkitTransform = ''
+  element.style.willChange = ''
   element.removeAttribute('data-motion-active')
+}
+
+function waitTwoFrames(): Promise<void> {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => resolve())
+    })
+  })
 }
 
 function animateItemY(
@@ -67,15 +76,18 @@ function animateItemY(
   }
 
   element.setAttribute('data-motion-active', 'true')
+  element.style.willChange = 'transform'
   element.style.transition = 'none'
+  element.style.webkitTransition = 'none'
   setTransform(element, fromY)
   void element.offsetHeight
 
   delayTimer = window.setTimeout(() => {
     if (cancelled || runId !== getRunId()) return
 
-    element.style.transition = `transform ${ICON_ITEM_DURATION_MS}ms ${EASING}`
-    element.style.webkitTransition = `-webkit-transform ${ICON_ITEM_DURATION_MS}ms ${EASING}`
+    const transition = `transform ${ICON_ITEM_DURATION_MS}ms ${ICON_TRANSITION_EASING}`
+    element.style.transition = transition
+    element.style.webkitTransition = transition
     setTransform(element, toY)
   }, delayMs)
 
@@ -107,6 +119,7 @@ export function useSceneIconsAnimation({
     let retryFrame = 0
     let itemAnimations: ItemAnimation[] = []
     let started = false
+    let cancelled = false
 
     const finish = () => {
       if (runId !== runIdRef.current) return
@@ -120,13 +133,17 @@ export function useSceneIconsAnimation({
       onCompleteRef.current?.(phase)
     }
 
-    const start = () => {
+    const start = async () => {
       if (started || runId !== runIdRef.current) return
 
       const items = getItems(sceneItemsRef)
       if (items.length < FLOAT_ITEM_COUNT) return
 
       started = true
+      await waitTwoFrames()
+
+      if (cancelled || runId !== runIdRef.current) return
+
       itemAnimations = items.map((item, index) =>
         animateItemY(item, index, phase, runId, () => runIdRef.current),
       )
@@ -136,7 +153,7 @@ export function useSceneIconsAnimation({
     const tryStart = (attempt = 0) => {
       if (runId !== runIdRef.current) return
 
-      start()
+      void start()
 
       if (!started && attempt < 20) {
         retryFrame = window.requestAnimationFrame(() => tryStart(attempt + 1))
@@ -148,6 +165,7 @@ export function useSceneIconsAnimation({
     tryStart()
 
     return () => {
+      cancelled = true
       window.cancelAnimationFrame(retryFrame)
       window.clearTimeout(finishTimer)
       for (const animation of itemAnimations) {
