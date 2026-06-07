@@ -172,7 +172,15 @@ export function WelcomeLayout({
     .join(' ')
 
   return (
-    <div className={`welcome${variant === 'login' ? ' welcome--login' : ''}`}>
+    <div
+      className={[
+        'welcome',
+        variant === 'login' ? 'welcome--login' : '',
+        iconTransition !== 'idle' ? 'welcome--animating-icons' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
       <svg className="welcome__svg-defs" aria-hidden="true" width="0" height="0">
         <defs>
           <clipPath id="welcome-button-shape" clipPathUnits="objectBoundingBox">

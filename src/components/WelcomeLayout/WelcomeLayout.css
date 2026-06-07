@@ -32,6 +32,9 @@
   container-name: welcome;
 }
 
+.welcome--animating-icons {
+  container-type: normal;
+}
 
 .welcome__blobs {
   position: absolute;

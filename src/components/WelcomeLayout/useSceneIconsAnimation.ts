@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useRef, type RefObject } from 'react'
 import {
   FLOAT_ITEM_COUNT,
   ICON_ITEM_DURATION_MS,
@@ -11,7 +11,7 @@ import {
 
 type UseSceneIconsAnimationOptions = {
   iconTransition: IconTransition
-  sceneItemsRef: React.RefObject<(HTMLDivElement | null)[]>
+  sceneItemsRef: RefObject<(HTMLDivElement | null)[]>
   onAnimationComplete?: (phase: IconAnimationPhase) => void
 }
 
@@ -19,7 +19,7 @@ type ItemAnimation = {
   cancel: () => void
 }
 
-function getItems(ref: React.RefObject<(HTMLDivElement | null)[]>): HTMLDivElement[] {
+function getItems(ref: RefObject<(HTMLDivElement | null)[]>): HTMLDivElement[] {
   return (ref.current ?? []).filter((item): item is HTMLDivElement => item != null)
 }
 
@@ -36,14 +36,11 @@ function easeOutCubic(progress: number): number {
 }
 
 function setOffsetY(element: HTMLElement, y: number) {
-  const transform = `translate3d(0, ${y}px, 0)`
-  element.style.setProperty('transform', transform, 'important')
-  element.style.setProperty('-webkit-transform', transform, 'important')
+  element.style.setProperty('margin-top', `${y}px`, 'important')
 }
 
 function clearOffsetY(element: HTMLElement) {
-  element.style.removeProperty('transform')
-  element.style.removeProperty('-webkit-transform')
+  element.style.removeProperty('margin-top')
   element.removeAttribute('data-motion-active')
 }
 
@@ -105,7 +102,7 @@ export function useSceneIconsAnimation({
 
   onCompleteRef.current = onAnimationComplete
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const phase: IconAnimationPhase | null =
       iconTransition === 'exit-up'
         ? 'exit'
@@ -117,16 +114,11 @@ export function useSceneIconsAnimation({
 
     const runId = ++runIdRef.current
     let finishTimer = 0
+    let retryFrame = 0
     let itemAnimations: ItemAnimation[] = []
+    let started = false
 
-    const items = getItems(sceneItemsRef)
-    if (items.length === 0) return
-
-    itemAnimations = items.map((item, index) =>
-      animateItemY(item, index, phase, runId, () => runIdRef.current),
-    )
-
-    finishTimer = window.setTimeout(() => {
+    const finish = () => {
       if (runId !== runIdRef.current) return
 
       if (phase === 'enter') {
@@ -136,9 +128,37 @@ export function useSceneIconsAnimation({
       }
 
       onCompleteRef.current?.(phase)
-    }, ICON_TRANSITION_MS + 100)
+    }
+
+    const start = () => {
+      if (started || runId !== runIdRef.current) return
+
+      const items = getItems(sceneItemsRef)
+      if (items.length < FLOAT_ITEM_COUNT) return
+
+      started = true
+      itemAnimations = items.map((item, index) =>
+        animateItemY(item, index, phase, runId, () => runIdRef.current),
+      )
+      finishTimer = window.setTimeout(finish, ICON_TRANSITION_MS + 100)
+    }
+
+    const tryStart = (attempt = 0) => {
+      if (runId !== runIdRef.current) return
+
+      start()
+
+      if (!started && attempt < 20) {
+        retryFrame = window.requestAnimationFrame(() => tryStart(attempt + 1))
+      } else if (!started) {
+        finish()
+      }
+    }
+
+    tryStart()
 
     return () => {
+      window.cancelAnimationFrame(retryFrame)
       window.clearTimeout(finishTimer)
       for (const animation of itemAnimations) {
         animation.cancel()
