@@ -12,7 +12,7 @@ export function LoginPage({ showContent = true, onRegistration }: LoginPageProps
       className={`login__panel${showContent ? ' login__panel--visible' : ''}`}
       aria-hidden={!showContent}
     >
-      <h1 className="login__title">Login</h1>
+      <h1 className="welcome__title">Login</h1>
 
       <form
         id="login-form"

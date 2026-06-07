@@ -21,7 +21,7 @@
   display: grid;
   grid-template-rows:
     minmax(0, calc(556 / var(--design-h) * 100%))
-    minmax(0, calc(256 / var(--design-h) * 100%));
+    minmax(0, 1fr);
   width: min(100%, 26.875rem);
   height: 100%;
   max-height: 100%;
@@ -341,24 +341,16 @@
 }
 
 .welcome--login .welcome__content {
-  padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
+.welcome--login .login__panel {
+  flex: 1;
+  min-height: 0;
+}
+
 @media (max-height: 46rem) {
-  .welcome:not(.welcome--login) {
-    grid-template-rows: minmax(0, 1fr) minmax(0, auto);
-  }
-
-  .welcome--login {
-    grid-template-rows: minmax(0, 1fr) minmax(0, auto);
-  }
-
-  .welcome__content {
-    padding-bottom: max(2.5rem, env(safe-area-inset-bottom, 0px));
-  }
-
   .welcome__description {
     margin-bottom: 1.75rem;
   }

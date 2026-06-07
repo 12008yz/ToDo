@@ -1,17 +1,17 @@
-/* Login: flex-раскладка — работает на любом viewport. */
+/* Login: та же вертикальная сетка, что и на onboarding. */
 
 .login__panel {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100%;
+  flex: 1;
   min-height: 0;
   opacity: 0;
   transform: translateY(0.5rem);
   transition:
-    opacity var(--icon-item-duration, 820ms) var(--icon-transition-ease, ease),
-    transform var(--icon-item-duration, 820ms) var(--icon-transition-ease, ease);
+    opacity var(--icon-item-duration, 900ms) var(--icon-transition-ease, ease),
+    transform var(--icon-item-duration, 900ms) var(--icon-transition-ease, ease);
   pointer-events: none;
 }
 
@@ -32,23 +32,12 @@
   }
 }
 
-.login__title {
-  margin: 0 0 1rem;
-  flex-shrink: 0;
-  font-family: 'Lexend Deca', system-ui, sans-serif;
-  font-weight: 600;
-  font-size: clamp(1.25rem, 6.4cqw, 1.5rem);
-  line-height: calc(30 / 24);
-  text-align: center;
-  color: #24252c;
-}
-
 .login__fields {
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
   width: 100%;
-  margin: 0;
+  margin: 0 0 0.4375rem;
   flex-shrink: 0;
 }
 
@@ -76,7 +65,7 @@
 }
 
 .login__panel .welcome__cta {
-  margin-top: 15px;
+  margin-top: auto;
   flex-shrink: 0;
 }
 
@@ -101,4 +90,20 @@
 
 .login__link:active {
   opacity: 0.75;
+}
+
+@media (max-height: 46rem) {
+  .login__link {
+    margin-top: 1.25rem;
+  }
+}
+
+@media (max-height: 43.75rem) {
+  .login__fields {
+    margin-bottom: 0.25rem;
+  }
+
+  .login__link {
+    margin-top: 1rem;
+  }
 }
