@@ -148,7 +148,6 @@
 .welcome__scene-item {
   position: absolute;
   z-index: 1;
-  will-change: transform;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }

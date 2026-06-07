@@ -3,6 +3,7 @@ import {
   FLOAT_ITEM_COUNT,
   ICON_ITEM_DURATION_MS,
   ICON_ITEM_STAGGER_MS,
+  ICON_TRANSITION_MS,
   ICON_TRAVEL_PX,
   type IconAnimationPhase,
   type IconTransition,
@@ -15,19 +16,17 @@ type UseSceneIconsAnimationOptions = {
 
 const EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
 
-function prefersReducedMotion(): boolean {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
-}
-
 function getItemIndex(element: HTMLElement): number {
   return Number(element.dataset.itemIndex ?? 0)
 }
 
-function getTotalDurationMs(): number {
-  return (FLOAT_ITEM_COUNT - 1) * ICON_ITEM_STAGGER_MS + ICON_ITEM_DURATION_MS
+function getSceneItems(scene: HTMLElement): HTMLElement[] {
+  return Array.from(
+    scene.querySelectorAll<HTMLElement>('.welcome__scene-item'),
+  ).sort((a, b) => getItemIndex(a) - getItemIndex(b))
 }
 
-function getDelay(index: number, phase: IconAnimationPhase): number {
+function getDelayMs(index: number, phase: IconAnimationPhase): number {
   if (phase === 'exit') {
     return index * ICON_ITEM_STAGGER_MS
   }
@@ -35,64 +34,64 @@ function getDelay(index: number, phase: IconAnimationPhase): number {
   return (FLOAT_ITEM_COUNT - 1 - index) * ICON_ITEM_STAGGER_MS
 }
 
-function buildStaggeredKeyframes(
-  phase: IconAnimationPhase,
-  index: number,
-): Keyframe[] {
-  const travel = ICON_TRAVEL_PX
-  const total = getTotalDurationMs()
-  const delay = getDelay(index, phase)
-  const delayOffset = delay / total
-  const endOffset = Math.min(1, (delay + ICON_ITEM_DURATION_MS) / total)
-
-  if (phase === 'exit') {
-    return [
-      { transform: 'translate3d(0, 0, 0)', offset: 0 },
-      { transform: 'translate3d(0, 0, 0)', offset: delayOffset },
-      {
-        transform: `translate3d(0, ${-travel}px, 0)`,
-        offset: endOffset,
-        easing: EASING,
-      },
-      { transform: `translate3d(0, ${-travel}px, 0)`, offset: 1 },
-    ]
-  }
-
-  return [
-    { transform: `translate3d(0, ${travel}px, 0)`, offset: 0 },
-    { transform: `translate3d(0, ${travel}px, 0)`, offset: delayOffset },
-    {
-      transform: 'translate3d(0, 0, 0)',
-      offset: endOffset,
-      easing: EASING,
-    },
-    { transform: 'translate3d(0, 0, 0)', offset: 1 },
-  ]
-}
-
-function setStartTransform(items: HTMLElement[], phase: IconAnimationPhase) {
-  const travel = ICON_TRAVEL_PX
-
-  for (const item of items) {
-    item.style.transform =
-      phase === 'exit'
-        ? 'translate3d(0, 0, 0)'
-        : `translate3d(0, ${travel}px, 0)`
+function forceReflow(items: HTMLElement[]) {
+  if (items[0]) {
+    void items[0].offsetHeight
   }
 }
 
-function clearInlineTransform(items: HTMLElement[]) {
+function clearMotionStyles(items: HTMLElement[]) {
   for (const item of items) {
+    item.style.transition = 'none'
     item.style.transform = ''
   }
+
+  forceReflow(items)
+
+  for (const item of items) {
+    item.style.transition = ''
+  }
 }
 
-function waitForNextFrame(): Promise<void> {
-  return new Promise((resolve) => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => resolve())
-    })
-  })
+function runIconTransition(
+  items: HTMLElement[],
+  phase: IconAnimationPhase,
+  runId: number,
+  activeRunId: () => number,
+): number[] {
+  const travel = ICON_TRAVEL_PX
+  const from =
+    phase === 'exit'
+      ? 'translate3d(0, 0, 0)'
+      : `translate3d(0, ${travel}px, 0)`
+  const to =
+    phase === 'exit'
+      ? `translate3d(0, ${-travel}px, 0)`
+      : 'translate3d(0, 0, 0)'
+
+  for (const item of items) {
+    item.style.transition = 'none'
+    item.style.transform = from
+  }
+
+  forceReflow(items)
+
+  const startTimers: number[] = []
+
+  for (const item of items) {
+    const delayMs = getDelayMs(getItemIndex(item), phase)
+
+    const timer = window.setTimeout(() => {
+      if (runId !== activeRunId()) return
+
+      item.style.transition = `transform ${ICON_ITEM_DURATION_MS}ms ${EASING}`
+      item.style.transform = to
+    }, delayMs)
+
+    startTimers.push(timer)
+  }
+
+  return startTimers
 }
 
 export function useSceneIconsAnimation({
@@ -101,6 +100,7 @@ export function useSceneIconsAnimation({
 }: UseSceneIconsAnimationOptions) {
   const sceneRef = useRef<HTMLDivElement>(null)
   const onCompleteRef = useRef(onAnimationComplete)
+  const runIdRef = useRef(0)
 
   onCompleteRef.current = onAnimationComplete
 
@@ -112,61 +112,41 @@ export function useSceneIconsAnimation({
           ? 'enter'
           : null
 
-    if (!phase || !sceneRef.current) return
+    const scene = sceneRef.current
+    if (!phase || !scene) return
 
-    const items = Array.from(
-      sceneRef.current.querySelectorAll<HTMLElement>('.welcome__scene-item'),
-    ).sort((a, b) => getItemIndex(a) - getItemIndex(b))
-
+    const items = getSceneItems(scene)
     if (items.length === 0) return
 
-    if (prefersReducedMotion()) {
-      clearInlineTransform(items)
-      onCompleteRef.current?.(phase)
-      return
-    }
-
-    let cancelled = false
+    const runId = ++runIdRef.current
     let finishTimer = 0
-    const animations: Animation[] = []
+    let frameId = 0
+    let startTimers: number[] = []
 
     const finish = () => {
-      if (cancelled) return
+      if (runId !== runIdRef.current) return
 
       if (phase === 'enter') {
-        clearInlineTransform(items)
+        clearMotionStyles(items)
       }
 
       onCompleteRef.current?.(phase)
     }
 
-    setStartTransform(items, phase)
+    const start = () => {
+      if (runId !== runIdRef.current) return
 
-    void waitForNextFrame().then(() => {
-      if (cancelled) return
+      startTimers = runIconTransition(items, phase, runId, () => runIdRef.current)
+      finishTimer = window.setTimeout(finish, ICON_TRANSITION_MS + 150)
+    }
 
-      for (const item of items) {
-        const index = getItemIndex(item)
-        const animation = item.animate(buildStaggeredKeyframes(phase, index), {
-          duration: getTotalDurationMs(),
-          easing: 'linear',
-          fill: 'forwards',
-        })
-
-        animations.push(animation)
-      }
-
-      finishTimer = window.setTimeout(finish, getTotalDurationMs() + 80)
-    })
+    frameId = requestAnimationFrame(start)
 
     return () => {
-      cancelled = true
+      window.cancelAnimationFrame(frameId)
       window.clearTimeout(finishTimer)
-
-      for (const animation of animations) {
-        if (animation.playState !== 'finished') {
-          animation.cancel()
-        }
+      for (const timer of startTimers) {
+        window.clearTimeout(timer)
       }
     }
   }, [iconTransition])
