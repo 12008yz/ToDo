@@ -2,9 +2,10 @@ import { PrimaryButton } from '../../components/PrimaryButton'
 
 type OnboardingPageProps = {
   onStart?: () => void
+  disabled?: boolean
 }
 
-export function OnboardingPage({ onStart }: OnboardingPageProps) {
+export function OnboardingPage({ onStart, disabled }: OnboardingPageProps) {
   return (
     <>
       <h1 className="welcome__title">Task Sync</h1>
@@ -20,7 +21,9 @@ export function OnboardingPage({ onStart }: OnboardingPageProps) {
         </span>
       </p>
 
-      <PrimaryButton onClick={onStart}>Let&apos;s Start</PrimaryButton>
+      <PrimaryButton onClick={onStart} disabled={disabled}>
+        Let&apos;s Start
+      </PrimaryButton>
     </>
   )
 }

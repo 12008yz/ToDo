@@ -5,6 +5,7 @@ type PrimaryButtonProps = {
   type?: 'button' | 'submit'
   form?: string
   onClick?: () => void
+  disabled?: boolean
 }
 
 function ArrowIcon() {
@@ -31,11 +32,18 @@ export function PrimaryButton({
   type = 'button',
   form,
   onClick,
+  disabled,
 }: PrimaryButtonProps) {
   return (
     <div className="welcome__cta">
       <span className="welcome__button-shadow" aria-hidden="true" />
-      <button type={type} form={form} className="welcome__button" onClick={onClick}>
+      <button
+        type={type}
+        form={form}
+        className="welcome__button"
+        onClick={onClick}
+        disabled={disabled}
+      >
         <span className="welcome__button-label">{children}</span>
         <ArrowIcon />
       </button>

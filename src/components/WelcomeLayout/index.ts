@@ -1,1 +1,1 @@
-export { WelcomeLayout } from './WelcomeLayout'
+export { WelcomeLayout, type IconTransition } from './WelcomeLayout'

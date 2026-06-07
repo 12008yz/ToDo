@@ -1,4 +1,4 @@
-/* Login: flex-раскладка — работает на любом viewport (absolute ломался на мобиле). */
+/* Login: flex-раскладка — работает на любом viewport. */
 
 .login__panel {
   display: flex;
@@ -7,6 +7,29 @@
   width: 100%;
   height: 100%;
   min-height: 0;
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition:
+    opacity var(--icon-item-duration, 820ms) var(--icon-transition-ease, ease),
+    transform var(--icon-item-duration, 820ms) var(--icon-transition-ease, ease);
+  pointer-events: none;
+}
+
+.login__panel--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login__panel {
+    transform: none;
+    transition: none;
+  }
+
+  .login__panel--visible {
+    opacity: 1;
+  }
 }
 
 .login__title {
@@ -52,7 +75,6 @@
     0 0 0 2px rgba(95, 51, 225, 0.15);
 }
 
-/* Figma: 15px между полями и кнопкой Enter */
 .login__panel .welcome__cta {
   margin-top: 15px;
   flex-shrink: 0;

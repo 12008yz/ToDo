@@ -10,6 +10,12 @@
   --color-primary: #5f33e1;
   --color-black: #24252c;
   --color-secondary: #6e6a7c;
+  --icon-item-duration: 820ms;
+  --icon-item-stagger: 110ms;
+  --float-item-count: 12;
+  --icon-transition-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --content-transition-duration: 350ms;
+  --icon-travel: 120vh;
 
   position: relative;
   display: grid;
@@ -173,6 +179,65 @@
   top: calc(310 / var(--hero-h) * 100%);
 }
 
+/* --- Поочерёдная анимация иконок и точек (персонаж остаётся) --- */
+
+.welcome__scene-item {
+  --item-delay: calc(var(--item-index, 0) * var(--icon-item-stagger));
+  --enter-index: calc(var(--float-item-count) - 1 - var(--item-index, 0));
+  --enter-delay: calc(var(--enter-index) * var(--icon-item-stagger));
+}
+
+.welcome__scene--icons-exit .welcome__scene-item {
+  transition: transform var(--icon-item-duration) var(--icon-transition-ease);
+  transition-delay: var(--item-delay);
+  transform: translateY(calc(-1 * var(--icon-travel)));
+}
+
+.welcome__scene--icons-exit .welcome__illustration--calendar {
+  transform: rotate(12.86deg) translateY(calc(-1 * var(--icon-travel)));
+}
+
+.welcome__scene--icons-enter .welcome__scene-item {
+  animation: welcome-item-enter var(--icon-item-duration) var(--icon-transition-ease) both;
+  animation-delay: var(--enter-delay);
+}
+
+.welcome__scene--icons-enter .welcome__illustration--calendar {
+  animation-name: welcome-item-enter-calendar;
+}
+
+@keyframes welcome-item-enter {
+  from {
+    transform: translateY(var(--icon-travel));
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes welcome-item-enter-calendar {
+  from {
+    transform: rotate(12.86deg) translateY(var(--icon-travel));
+  }
+
+  to {
+    transform: rotate(12.86deg) translateY(0);
+  }
+}
+
+.welcome__content--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome__scene-item {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
 .welcome__dot {
   position: absolute;
   border-radius: 50%;
@@ -246,6 +311,7 @@
     0
     calc(22 / var(--design-w) * 100%)
     max(4.5625rem, env(safe-area-inset-bottom, 0px));
+  transition: opacity var(--content-transition-duration) ease;
 }
 
 .welcome--login .welcome__content {
@@ -366,8 +432,13 @@
   opacity: 0.92;
 }
 
-.welcome__button:active {
+.welcome__button:active:not(:disabled) {
   opacity: 0.85;
+}
+
+.welcome__button:disabled {
+  cursor: default;
+  opacity: 0.72;
 }
 
 .welcome__button-label {

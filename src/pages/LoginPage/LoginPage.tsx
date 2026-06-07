@@ -2,12 +2,16 @@ import { PrimaryButton } from '../../components/PrimaryButton'
 import './LoginPage.css'
 
 type LoginPageProps = {
+  showContent?: boolean
   onRegistration?: () => void
 }
 
-export function LoginPage({ onRegistration }: LoginPageProps) {
+export function LoginPage({ showContent = true, onRegistration }: LoginPageProps) {
   return (
-    <div className="login__panel">
+    <div
+      className={`login__panel${showContent ? ' login__panel--visible' : ''}`}
+      aria-hidden={!showContent}
+    >
       <h1 className="login__title">Login</h1>
 
       <form
@@ -21,6 +25,7 @@ export function LoginPage({ onRegistration }: LoginPageProps) {
           name="email"
           autoComplete="email"
           aria-label="Email"
+          tabIndex={showContent ? 0 : -1}
         />
         <input
           className="login__field"
@@ -28,6 +33,7 @@ export function LoginPage({ onRegistration }: LoginPageProps) {
           name="password"
           autoComplete="current-password"
           aria-label="Password"
+          tabIndex={showContent ? 0 : -1}
         />
       </form>
 
@@ -35,7 +41,12 @@ export function LoginPage({ onRegistration }: LoginPageProps) {
         Enter
       </PrimaryButton>
 
-      <button type="button" className="login__link" onClick={onRegistration}>
+      <button
+        type="button"
+        className="login__link"
+        onClick={onRegistration}
+        tabIndex={showContent ? 0 : -1}
+      >
         Registration
       </button>
     </div>
