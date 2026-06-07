@@ -6,7 +6,7 @@ import { ICON_TRANSITION_MS } from './constants/transitions'
 import './App.css'
 
 type AppPage = 'onboarding' | 'login'
-type TransitionPhase = 'idle' | 'exiting' | 'entering-icons'
+type TransitionPhase = 'idle' | 'exiting' | 'pre-enter' | 'entering-icons'
 
 function App() {
   const [page, setPage] = useState<AppPage>('onboarding')
@@ -24,9 +24,22 @@ function App() {
     if (transitionPhase === 'exiting') {
       const timer = window.setTimeout(() => {
         setPage('login')
-        setTransitionPhase('entering-icons')
+        setTransitionPhase('pre-enter')
       }, ICON_TRANSITION_MS)
       return () => window.clearTimeout(timer)
+    }
+
+    if (transitionPhase === 'pre-enter') {
+      let raf2 = 0
+      const raf1 = requestAnimationFrame(() => {
+        raf2 = requestAnimationFrame(() => {
+          setTransitionPhase('entering-icons')
+        })
+      })
+      return () => {
+        cancelAnimationFrame(raf1)
+        cancelAnimationFrame(raf2)
+      }
     }
 
     if (transitionPhase === 'entering-icons') {
@@ -40,14 +53,17 @@ function App() {
   const iconTransition: IconTransition =
     transitionPhase === 'exiting'
       ? 'exit-up'
-      : transitionPhase === 'entering-icons'
-        ? 'enter-from-bottom'
-        : 'idle'
+      : transitionPhase === 'pre-enter'
+        ? 'pre-enter'
+        : transitionPhase === 'entering-icons'
+          ? 'enter-from-bottom'
+          : 'idle'
 
   const contentHidden = transitionPhase === 'exiting'
 
   const showLoginContent =
-    isLogin && (transitionPhase === 'entering-icons' || transitionPhase === 'idle')
+    isLogin &&
+    (transitionPhase === 'entering-icons' || transitionPhase === 'idle')
 
   return (
     <main className="app">

@@ -185,19 +185,33 @@
   --item-delay: calc(var(--item-index, 0) * var(--icon-item-stagger));
   --enter-index: calc(var(--float-item-count) - 1 - var(--item-index, 0));
   --enter-delay: calc(var(--enter-index) * var(--icon-item-stagger));
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .welcome__scene--icons-exit .welcome__scene-item {
-  transition: transform var(--icon-item-duration) var(--icon-transition-ease);
-  transition-delay: var(--item-delay);
-  transform: translateY(calc(-1 * var(--icon-travel)));
+  animation: welcome-item-exit var(--icon-item-duration) var(--icon-transition-ease) both;
+  animation-delay: var(--item-delay);
 }
 
 .welcome__scene--icons-exit .welcome__illustration--calendar {
-  transform: rotate(12.86deg) translateY(calc(-1 * var(--icon-travel)));
+  animation-name: welcome-item-exit-calendar;
+}
+
+/* Между выездом и въездом: иконки скрыты снизу, без мигания на месте */
+.welcome__scene--icons-pre-enter .welcome__scene-item {
+  animation: none;
+  opacity: 0;
+  transform: translate3d(0, 120vh, 0);
+}
+
+.welcome__scene--icons-pre-enter .welcome__illustration--calendar {
+  transform: rotate(12.86deg) translate3d(0, 120vh, 0);
 }
 
 .welcome__scene--icons-enter .welcome__scene-item {
+  opacity: 1;
   animation: welcome-item-enter var(--icon-item-duration) var(--icon-transition-ease) both;
   animation-delay: var(--enter-delay);
 }
@@ -206,23 +220,54 @@
   animation-name: welcome-item-enter-calendar;
 }
 
-@keyframes welcome-item-enter {
+.welcome__scene:not(.welcome__scene--icons-exit):not(.welcome__scene--icons-pre-enter):not(.welcome__scene--icons-enter)
+  .welcome__scene-item {
+  animation: none;
+  transform: none;
+}
+
+.welcome__scene:not(.welcome__scene--icons-exit):not(.welcome__scene--icons-pre-enter):not(.welcome__scene--icons-enter)
+  .welcome__illustration--calendar {
+  transform: rotate(12.86deg);
+}
+
+@keyframes welcome-item-exit {
   from {
-    transform: translateY(var(--icon-travel));
+    transform: translate3d(0, 0, 0);
   }
 
   to {
-    transform: translateY(0);
+    transform: translate3d(0, -120vh, 0);
+  }
+}
+
+@keyframes welcome-item-exit-calendar {
+  from {
+    transform: rotate(12.86deg) translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: rotate(12.86deg) translate3d(0, -120vh, 0);
+  }
+}
+
+@keyframes welcome-item-enter {
+  from {
+    transform: translate3d(0, 120vh, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes welcome-item-enter-calendar {
   from {
-    transform: rotate(12.86deg) translateY(var(--icon-travel));
+    transform: rotate(12.86deg) translate3d(0, 120vh, 0);
   }
 
   to {
-    transform: rotate(12.86deg) translateY(0);
+    transform: rotate(12.86deg) translate3d(0, 0, 0);
   }
 }
 
@@ -233,8 +278,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .welcome__scene-item {
-    transition: none !important;
     animation: none !important;
+    transform: none !important;
   }
 }
 

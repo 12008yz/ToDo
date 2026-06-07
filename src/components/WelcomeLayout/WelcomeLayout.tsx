@@ -11,7 +11,7 @@ const ILLUSTRATIONS = {
   calendar: '/loginAndRegister/blue-desk-calendar.png',
 } as const
 
-export type IconTransition = 'idle' | 'exit-up' | 'enter-from-bottom'
+export type IconTransition = 'idle' | 'exit-up' | 'pre-enter' | 'enter-from-bottom'
 
 type WelcomeLayoutProps = {
   children: ReactNode
@@ -33,6 +33,7 @@ export function WelcomeLayout({
   const sceneClassName = [
     'welcome__scene',
     iconTransition === 'exit-up' ? 'welcome__scene--icons-exit' : '',
+    iconTransition === 'pre-enter' ? 'welcome__scene--icons-pre-enter' : '',
     iconTransition === 'enter-from-bottom' ? 'welcome__scene--icons-enter' : '',
   ]
     .filter(Boolean)
