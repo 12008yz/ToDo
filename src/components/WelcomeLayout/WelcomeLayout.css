@@ -124,6 +124,8 @@
   flex: 0 0 auto;
   width: 100%;
   aspect-ratio: 375 / 556;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .welcome__illustration {
@@ -143,50 +145,108 @@
   z-index: 2;
 }
 
-.welcome__illustration--stopwatch {
+.welcome__scene-item {
+  position: absolute;
+  z-index: 1;
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.welcome__scene-item .welcome__illustration {
+  position: static;
+  width: 100%;
+}
+
+.welcome__scene-item .welcome__dot {
+  position: static;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.welcome__scene-item--stopwatch {
   width: calc(40 / var(--design-w) * 100%);
   left: calc(104 / var(--design-w) * 100%);
   top: calc(69 / var(--hero-h) * 100%);
 }
 
-.welcome__illustration--calendar {
+.welcome__scene-item--calendar {
   width: calc(31.35 / var(--design-w) * 100%);
   left: calc(276 / var(--design-w) * 100%);
   top: calc(136 / var(--hero-h) * 100%);
+}
+
+.welcome__scene-item--calendar .welcome__illustration {
   transform: rotate(12.86deg);
 }
 
-.welcome__illustration--pie {
+.welcome__scene-item--pie {
   width: calc(26 / var(--design-w) * 100%);
   left: calc(84 / var(--design-w) * 100%);
   top: calc(180 / var(--hero-h) * 100%);
 }
 
-.welcome__illustration--notifications {
+.welcome__scene-item--notifications {
   width: calc(62 / var(--design-w) * 100%);
   left: calc(245 / var(--design-w) * 100%);
   top: calc(225 / var(--hero-h) * 100%);
   z-index: 3;
 }
 
-.welcome__illustration--vase {
+.welcome__scene-item--vase {
   width: calc(36 / var(--design-w) * 100%);
   left: calc(79 / var(--design-w) * 100%);
   top: calc(279 / var(--hero-h) * 100%);
 }
 
-.welcome__illustration--coffee {
+.welcome__scene-item--coffee {
   width: calc(18 / var(--design-w) * 100%);
   left: calc(67 / var(--design-w) * 100%);
   top: calc(310 / var(--hero-h) * 100%);
 }
 
-/* --- Иконки и точки: анимация через Web Animations API (useSceneIconsAnimation) --- */
+.welcome__scene-item--dot-blue {
+  width: calc(8 / var(--design-w) * 100%);
+  left: calc(252 / var(--design-w) * 100%);
+  top: calc(73 / var(--hero-h) * 100%);
+  z-index: 2;
+}
 
-.welcome__scene-item {
-  will-change: transform;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
+.welcome__scene-item--dot-purple {
+  width: calc(4 / var(--design-w) * 100%);
+  left: calc(202 / var(--design-w) * 100%);
+  top: calc(92 / var(--hero-h) * 100%);
+  z-index: 2;
+}
+
+.welcome__scene-item--dot-green {
+  width: calc(4 / var(--design-w) * 100%);
+  left: calc(281 / var(--design-w) * 100%);
+  top: calc(362 / var(--hero-h) * 100%);
+  z-index: 2;
+}
+
+.welcome__scene-item--dot-yellow {
+  width: calc(8 / var(--design-w) * 100%);
+  left: calc(250 / var(--design-w) * 100%);
+  top: calc(383 / var(--hero-h) * 100%);
+  z-index: 2;
+}
+
+.welcome__scene-item--dot-pink {
+  width: calc(8 / var(--design-w) * 100%);
+  left: calc(138 / var(--design-w) * 100%);
+  top: calc(391 / var(--hero-h) * 100%);
+  z-index: 2;
+}
+
+.welcome__scene-item--dot-sky {
+  width: calc(4 / var(--design-w) * 100%);
+  left: calc(176 / var(--design-w) * 100%);
+  top: calc(405 / var(--hero-h) * 100%);
+  z-index: 2;
 }
 
 .welcome__content--hidden {
@@ -201,54 +261,30 @@
 }
 
 .welcome__dot {
-  position: absolute;
   border-radius: 50%;
-  z-index: 2;
-}
-
-.welcome__dot--8 {
-  width: calc(8 / var(--design-w) * 100%);
-  aspect-ratio: 1;
-}
-
-.welcome__dot--4 {
-  width: calc(4 / var(--design-w) * 100%);
-  aspect-ratio: 1;
 }
 
 .welcome__dot--blue {
-  left: calc(252 / var(--design-w) * 100%);
-  top: calc(73 / var(--hero-h) * 100%);
   background: #92deff;
 }
 
 .welcome__dot--purple {
-  left: calc(202 / var(--design-w) * 100%);
-  top: calc(92 / var(--hero-h) * 100%);
   background: #be9fff;
 }
 
 .welcome__dot--yellow {
-  left: calc(250 / var(--design-w) * 100%);
-  top: calc(383 / var(--hero-h) * 100%);
   background: #eaed2a;
 }
 
 .welcome__dot--green {
-  left: calc(281 / var(--design-w) * 100%);
-  top: calc(362 / var(--hero-h) * 100%);
   background: #7ffcaa;
 }
 
 .welcome__dot--pink {
-  left: calc(138 / var(--design-w) * 100%);
-  top: calc(391 / var(--hero-h) * 100%);
   background: #ffd7e4;
 }
 
 .welcome__dot--sky {
-  left: calc(176 / var(--design-w) * 100%);
-  top: calc(405 / var(--hero-h) * 100%);
   background: #a4e7f9;
 }
 

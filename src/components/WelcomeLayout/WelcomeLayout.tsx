@@ -61,50 +61,70 @@ export function WelcomeLayout({
 
       <div className="welcome__hero">
         <div ref={sceneRef} className="welcome__scene" aria-hidden="true">
-          <img
-            className="welcome__illustration welcome__scene-item welcome__illustration--stopwatch"
+          <div
+            className="welcome__scene-item welcome__scene-item--stopwatch"
             data-item-index={0}
-            src={ILLUSTRATIONS.stopwatch}
-            width={40}
-            height={50}
-            decoding="async"
-            alt=""
-          />
-          <span
-            className="welcome__dot welcome__dot--8 welcome__dot--blue welcome__scene-item"
+          >
+            <img
+              className="welcome__illustration welcome__illustration--stopwatch"
+              src={ILLUSTRATIONS.stopwatch}
+              width={40}
+              height={50}
+              decoding="async"
+              alt=""
+            />
+          </div>
+          <div
+            className="welcome__scene-item welcome__scene-item--dot-blue"
             data-item-index={1}
-          />
-          <span
-            className="welcome__dot welcome__dot--4 welcome__dot--purple welcome__scene-item"
+          >
+            <span className="welcome__dot welcome__dot--8 welcome__dot--blue" />
+          </div>
+          <div
+            className="welcome__scene-item welcome__scene-item--dot-purple"
             data-item-index={2}
-          />
-          <img
-            className="welcome__illustration welcome__scene-item welcome__illustration--calendar"
+          >
+            <span className="welcome__dot welcome__dot--4 welcome__dot--purple" />
+          </div>
+          <div
+            className="welcome__scene-item welcome__scene-item--calendar"
             data-item-index={3}
-            src={ILLUSTRATIONS.calendar}
-            width={31}
-            height={28}
-            decoding="async"
-            alt=""
-          />
-          <img
-            className="welcome__illustration welcome__scene-item welcome__illustration--pie"
+          >
+            <img
+              className="welcome__illustration welcome__illustration--calendar"
+              src={ILLUSTRATIONS.calendar}
+              width={31}
+              height={28}
+              decoding="async"
+              alt=""
+            />
+          </div>
+          <div
+            className="welcome__scene-item welcome__scene-item--pie"
             data-item-index={4}
-            src={ILLUSTRATIONS.pieChart}
-            width={26}
-            height={26}
-            decoding="async"
-            alt=""
-          />
-          <img
-            className="welcome__illustration welcome__scene-item welcome__illustration--notifications"
+          >
+            <img
+              className="welcome__illustration welcome__illustration--pie"
+              src={ILLUSTRATIONS.pieChart}
+              width={26}
+              height={26}
+              decoding="async"
+              alt=""
+            />
+          </div>
+          <div
+            className="welcome__scene-item welcome__scene-item--notifications"
             data-item-index={5}
-            src={ILLUSTRATIONS.notifications}
-            width={62}
-            height={42}
-            decoding="async"
-            alt=""
-          />
+          >
+            <img
+              className="welcome__illustration welcome__illustration--notifications"
+              src={ILLUSTRATIONS.notifications}
+              width={62}
+              height={42}
+              decoding="async"
+              alt=""
+            />
+          </div>
           <img
             className="welcome__illustration welcome__illustration--female"
             src={ILLUSTRATIONS.female}
@@ -114,40 +134,56 @@ export function WelcomeLayout({
             fetchPriority="high"
             alt=""
           />
-          <img
-            className="welcome__illustration welcome__scene-item welcome__illustration--vase"
+          <div
+            className="welcome__scene-item welcome__scene-item--vase"
             data-item-index={6}
-            src={ILLUSTRATIONS.vase}
-            width={36}
-            height={52}
-            decoding="async"
-            alt=""
-          />
-          <img
-            className="welcome__illustration welcome__scene-item welcome__illustration--coffee"
+          >
+            <img
+              className="welcome__illustration welcome__illustration--vase"
+              src={ILLUSTRATIONS.vase}
+              width={36}
+              height={52}
+              decoding="async"
+              alt=""
+            />
+          </div>
+          <div
+            className="welcome__scene-item welcome__scene-item--coffee"
             data-item-index={7}
-            src={ILLUSTRATIONS.coffee}
-            width={18}
-            height={22}
-            decoding="async"
-            alt=""
-          />
-          <span
-            className="welcome__dot welcome__dot--4 welcome__dot--green welcome__scene-item"
+          >
+            <img
+              className="welcome__illustration welcome__illustration--coffee"
+              src={ILLUSTRATIONS.coffee}
+              width={18}
+              height={22}
+              decoding="async"
+              alt=""
+            />
+          </div>
+          <div
+            className="welcome__scene-item welcome__scene-item--dot-green"
             data-item-index={8}
-          />
-          <span
-            className="welcome__dot welcome__dot--8 welcome__dot--yellow welcome__scene-item"
+          >
+            <span className="welcome__dot welcome__dot--4 welcome__dot--green" />
+          </div>
+          <div
+            className="welcome__scene-item welcome__scene-item--dot-yellow"
             data-item-index={9}
-          />
-          <span
-            className="welcome__dot welcome__dot--8 welcome__dot--pink welcome__scene-item"
+          >
+            <span className="welcome__dot welcome__dot--8 welcome__dot--yellow" />
+          </div>
+          <div
+            className="welcome__scene-item welcome__scene-item--dot-pink"
             data-item-index={10}
-          />
-          <span
-            className="welcome__dot welcome__dot--4 welcome__dot--sky welcome__scene-item"
+          >
+            <span className="welcome__dot welcome__dot--8 welcome__dot--pink" />
+          </div>
+          <div
+            className="welcome__scene-item welcome__scene-item--dot-sky"
             data-item-index={11}
-          />
+          >
+            <span className="welcome__dot welcome__dot--4 welcome__dot--sky" />
+          </div>
         </div>
       </div>
 
