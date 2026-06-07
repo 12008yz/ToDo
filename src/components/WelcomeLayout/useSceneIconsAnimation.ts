@@ -19,6 +19,8 @@ type ItemAnimation = {
   cancel: () => void
 }
 
+const EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
+
 function getItems(ref: RefObject<(HTMLDivElement | null)[]>): HTMLDivElement[] {
   return (ref.current ?? []).filter((item): item is HTMLDivElement => item != null)
 }
@@ -31,16 +33,16 @@ function getDelayMs(index: number, phase: IconAnimationPhase): number {
   return (FLOAT_ITEM_COUNT - 1 - index) * ICON_ITEM_STAGGER_MS
 }
 
-function easeOutCubic(progress: number): number {
-  return 1 - (1 - progress) ** 3
+function setTransform(element: HTMLElement, y: number) {
+  const value = `translate3d(0, ${y}px, 0)`
+  element.style.transform = value
+  element.style.webkitTransform = value
 }
 
-function setOffsetY(element: HTMLElement, y: number) {
-  element.style.setProperty('margin-top', `${y}px`, 'important')
-}
-
-function clearOffsetY(element: HTMLElement) {
-  element.style.removeProperty('margin-top')
+function clearMotionStyles(element: HTMLElement) {
+  element.style.transition = ''
+  element.style.transform = ''
+  element.style.webkitTransform = ''
   element.removeAttribute('data-motion-active')
 }
 
@@ -57,36 +59,24 @@ function animateItemY(
   const delayMs = getDelayMs(index, phase)
 
   let delayTimer = 0
-  let frameId = 0
   let cancelled = false
 
   const cancel = () => {
     cancelled = true
     window.clearTimeout(delayTimer)
-    window.cancelAnimationFrame(frameId)
   }
 
   element.setAttribute('data-motion-active', 'true')
-  setOffsetY(element, fromY)
+  element.style.transition = 'none'
+  setTransform(element, fromY)
+  void element.offsetHeight
 
   delayTimer = window.setTimeout(() => {
     if (cancelled || runId !== getRunId()) return
 
-    const startTime = performance.now()
-
-    const tick = (now: number) => {
-      if (cancelled || runId !== getRunId()) return
-
-      const progress = Math.min(1, (now - startTime) / ICON_ITEM_DURATION_MS)
-      const y = fromY + (toY - fromY) * easeOutCubic(progress)
-      setOffsetY(element, y)
-
-      if (progress < 1) {
-        frameId = window.requestAnimationFrame(tick)
-      }
-    }
-
-    frameId = window.requestAnimationFrame(tick)
+    element.style.transition = `transform ${ICON_ITEM_DURATION_MS}ms ${EASING}`
+    element.style.webkitTransition = `-webkit-transform ${ICON_ITEM_DURATION_MS}ms ${EASING}`
+    setTransform(element, toY)
   }, delayMs)
 
   return { cancel }
@@ -123,7 +113,7 @@ export function useSceneIconsAnimation({
 
       if (phase === 'enter') {
         for (const item of getItems(sceneItemsRef)) {
-          clearOffsetY(item)
+          clearMotionStyles(item)
         }
       }
 

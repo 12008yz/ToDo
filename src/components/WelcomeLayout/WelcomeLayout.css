@@ -155,6 +155,8 @@
 
 .welcome__scene-item[data-motion-active] {
   will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .welcome__scene-item .welcome__illustration {
