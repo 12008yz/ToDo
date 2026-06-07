@@ -27,7 +27,7 @@
   max-height: 100%;
   margin-inline: auto;
   background: #ffffff;
-  overflow: clip;
+  overflow: hidden;
   container-type: inline-size;
   container-name: welcome;
 }
@@ -124,8 +124,6 @@
   flex: 0 0 auto;
   width: 100%;
   aspect-ratio: 375 / 556;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
 }
 
 .welcome__illustration {
@@ -150,6 +148,10 @@
   z-index: 1;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+
+.welcome__scene-item[data-motion-active] {
+  will-change: transform;
 }
 
 .welcome__scene-item .welcome__illustration {
@@ -254,8 +256,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .welcome__scene-item {
-    transform: none !important;
+  .welcome__scene-item:not([data-motion-active]) {
+    transform: none;
   }
 }
 

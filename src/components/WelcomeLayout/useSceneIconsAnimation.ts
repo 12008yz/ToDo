@@ -11,19 +11,16 @@ import {
 
 type UseSceneIconsAnimationOptions = {
   iconTransition: IconTransition
+  sceneItemsRef: React.RefObject<(HTMLDivElement | null)[]>
   onAnimationComplete?: (phase: IconAnimationPhase) => void
 }
 
-const EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
-
-function getItemIndex(element: HTMLElement): number {
-  return Number(element.dataset.itemIndex ?? 0)
+type ItemAnimation = {
+  cancel: () => void
 }
 
-function getSceneItems(scene: HTMLElement): HTMLElement[] {
-  return Array.from(
-    scene.querySelectorAll<HTMLElement>('.welcome__scene-item'),
-  ).sort((a, b) => getItemIndex(a) - getItemIndex(b))
+function getItems(ref: React.RefObject<(HTMLDivElement | null)[]>): HTMLDivElement[] {
+  return (ref.current ?? []).filter((item): item is HTMLDivElement => item != null)
 }
 
 function getDelayMs(index: number, phase: IconAnimationPhase): number {
@@ -34,71 +31,75 @@ function getDelayMs(index: number, phase: IconAnimationPhase): number {
   return (FLOAT_ITEM_COUNT - 1 - index) * ICON_ITEM_STAGGER_MS
 }
 
-function forceReflow(items: HTMLElement[]) {
-  if (items[0]) {
-    void items[0].offsetHeight
-  }
+function easeOutCubic(progress: number): number {
+  return 1 - (1 - progress) ** 3
 }
 
-function clearMotionStyles(items: HTMLElement[]) {
-  for (const item of items) {
-    item.style.transition = 'none'
-    item.style.transform = ''
-  }
-
-  forceReflow(items)
-
-  for (const item of items) {
-    item.style.transition = ''
-  }
+function setOffsetY(element: HTMLElement, y: number) {
+  const transform = `translate3d(0, ${y}px, 0)`
+  element.style.setProperty('transform', transform, 'important')
+  element.style.setProperty('-webkit-transform', transform, 'important')
 }
 
-function runIconTransition(
-  items: HTMLElement[],
+function clearOffsetY(element: HTMLElement) {
+  element.style.removeProperty('transform')
+  element.style.removeProperty('-webkit-transform')
+  element.removeAttribute('data-motion-active')
+}
+
+function animateItemY(
+  element: HTMLDivElement,
+  index: number,
   phase: IconAnimationPhase,
   runId: number,
-  activeRunId: () => number,
-): number[] {
+  getRunId: () => number,
+): ItemAnimation {
   const travel = ICON_TRAVEL_PX
-  const from =
-    phase === 'exit'
-      ? 'translate3d(0, 0, 0)'
-      : `translate3d(0, ${travel}px, 0)`
-  const to =
-    phase === 'exit'
-      ? `translate3d(0, ${-travel}px, 0)`
-      : 'translate3d(0, 0, 0)'
+  const fromY = phase === 'exit' ? 0 : travel
+  const toY = phase === 'exit' ? -travel : 0
+  const delayMs = getDelayMs(index, phase)
 
-  for (const item of items) {
-    item.style.transition = 'none'
-    item.style.transform = from
+  let delayTimer = 0
+  let frameId = 0
+  let cancelled = false
+
+  const cancel = () => {
+    cancelled = true
+    window.clearTimeout(delayTimer)
+    window.cancelAnimationFrame(frameId)
   }
 
-  forceReflow(items)
+  element.setAttribute('data-motion-active', 'true')
+  setOffsetY(element, fromY)
 
-  const startTimers: number[] = []
+  delayTimer = window.setTimeout(() => {
+    if (cancelled || runId !== getRunId()) return
 
-  for (const item of items) {
-    const delayMs = getDelayMs(getItemIndex(item), phase)
+    const startTime = performance.now()
 
-    const timer = window.setTimeout(() => {
-      if (runId !== activeRunId()) return
+    const tick = (now: number) => {
+      if (cancelled || runId !== getRunId()) return
 
-      item.style.transition = `transform ${ICON_ITEM_DURATION_MS}ms ${EASING}`
-      item.style.transform = to
-    }, delayMs)
+      const progress = Math.min(1, (now - startTime) / ICON_ITEM_DURATION_MS)
+      const y = fromY + (toY - fromY) * easeOutCubic(progress)
+      setOffsetY(element, y)
 
-    startTimers.push(timer)
-  }
+      if (progress < 1) {
+        frameId = window.requestAnimationFrame(tick)
+      }
+    }
 
-  return startTimers
+    frameId = window.requestAnimationFrame(tick)
+  }, delayMs)
+
+  return { cancel }
 }
 
 export function useSceneIconsAnimation({
   iconTransition,
+  sceneItemsRef,
   onAnimationComplete,
 }: UseSceneIconsAnimationOptions) {
-  const sceneRef = useRef<HTMLDivElement>(null)
   const onCompleteRef = useRef(onAnimationComplete)
   const runIdRef = useRef(0)
 
@@ -112,44 +113,38 @@ export function useSceneIconsAnimation({
           ? 'enter'
           : null
 
-    const scene = sceneRef.current
-    if (!phase || !scene) return
-
-    const items = getSceneItems(scene)
-    if (items.length === 0) return
+    if (!phase) return
 
     const runId = ++runIdRef.current
     let finishTimer = 0
-    let frameId = 0
-    let startTimers: number[] = []
+    let itemAnimations: ItemAnimation[] = []
 
-    const finish = () => {
+    const items = getItems(sceneItemsRef)
+    if (items.length === 0) return
+
+    itemAnimations = items.map((item, index) =>
+      animateItemY(item, index, phase, runId, () => runIdRef.current),
+    )
+
+    finishTimer = window.setTimeout(() => {
       if (runId !== runIdRef.current) return
 
       if (phase === 'enter') {
-        clearMotionStyles(items)
+        for (const item of getItems(sceneItemsRef)) {
+          clearOffsetY(item)
+        }
       }
 
       onCompleteRef.current?.(phase)
-    }
-
-    const start = () => {
-      if (runId !== runIdRef.current) return
-
-      startTimers = runIconTransition(items, phase, runId, () => runIdRef.current)
-      finishTimer = window.setTimeout(finish, ICON_TRANSITION_MS + 150)
-    }
-
-    frameId = requestAnimationFrame(start)
+    }, ICON_TRANSITION_MS + 100)
 
     return () => {
-      window.cancelAnimationFrame(frameId)
       window.clearTimeout(finishTimer)
-      for (const timer of startTimers) {
-        window.clearTimeout(timer)
+      for (const animation of itemAnimations) {
+        animation.cancel()
       }
     }
-  }, [iconTransition])
+  }, [iconTransition, sceneItemsRef])
 
-  return sceneRef
+  return null
 }
