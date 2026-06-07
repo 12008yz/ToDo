@@ -1,0 +1,60 @@
+/* Поля ввода: Figma Rectangle 1085 — 331×30, left 22, radius 15 */
+
+.login__fields {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin: 0;
+}
+
+.login__field {
+  box-sizing: border-box;
+  width: 100%;
+  height: 1.875rem;
+  padding: 0 0.875rem;
+  background: #ffffff;
+  border: 1px solid #5f33e1;
+  border-radius: 15px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.04);
+  font-family: 'Lexend Deca', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.875rem;
+  color: #24252c;
+}
+
+.login__field::placeholder {
+  color: #6e6a7c;
+}
+
+.login__field:focus {
+  outline: none;
+  box-shadow:
+    0 10px 32px rgba(0, 0, 0, 0.04),
+    0 0 0 2px rgba(95, 51, 225, 0.15);
+}
+
+.login__link {
+  margin-top: 0.75rem;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: 'Lexend Deca', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: calc(18 / 14);
+  text-align: center;
+  color: #5f33e1;
+  cursor: pointer;
+}
+
+.login__link:hover {
+  opacity: 0.85;
+}
+
+.login__link:active {
+  opacity: 0.75;
+}

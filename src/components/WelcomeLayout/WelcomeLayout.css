@@ -1,13 +1,12 @@
-/* Макет Figma: 375×812. Вертикальная сетка 556 + 256. */
+/* Макет Figma: 375×812. Вертикальная сетка 556 + контент. */
 
-.onboarding {
+.welcome {
   --design-w: 375;
   --design-h: 812;
   --hero-h: 556;
   --btn-w: 331;
   --btn-h: 52;
   --btn-radius: 14;
-  --btn-arc: 4;
   --color-primary: #5f33e1;
   --color-black: #24252c;
   --color-secondary: #6e6a7c;
@@ -24,25 +23,29 @@
   background: #ffffff;
   overflow: clip;
   container-type: inline-size;
-  container-name: onboarding;
+  container-name: welcome;
 }
 
-/* --- Фоновые блобы (координаты от всей страницы 812) --- */
+.welcome--login {
+  grid-template-rows:
+    minmax(0, calc(556 / var(--design-h) * 100%))
+    minmax(0, 1fr);
+}
 
-.onboarding__blobs {
+.welcome__blobs {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 0;
 }
 
-.onboarding__blob {
+.welcome__blob {
   position: absolute;
   border-radius: 50%;
   filter: blur(50px);
 }
 
-.onboarding__blob--green {
+.welcome__blob--green {
   width: calc(70 / var(--design-w) * 100%);
   aspect-ratio: 1;
   left: calc(-15 / var(--design-w) * 100%);
@@ -54,7 +57,7 @@
   );
 }
 
-.onboarding__blob--yellow-top {
+.welcome__blob--yellow-top {
   width: calc(70 / var(--design-w) * 100%);
   aspect-ratio: 1;
   left: calc(263 / var(--design-w) * 100%);
@@ -66,7 +69,7 @@
   );
 }
 
-.onboarding__blob--blue-right {
+.welcome__blob--blue-right {
   width: calc(60 / var(--design-w) * 100%);
   aspect-ratio: 1;
   left: calc(333 / var(--design-w) * 100%);
@@ -78,7 +81,7 @@
   );
 }
 
-.onboarding__blob--cyan {
+.welcome__blob--cyan {
   width: calc(58 / var(--design-w) * 100%);
   aspect-ratio: 1;
   left: calc(76 / var(--design-w) * 100%);
@@ -92,7 +95,7 @@
   filter: blur(45px);
 }
 
-.onboarding__blob--yellow-bottom {
+.welcome__blob--yellow-bottom {
   width: calc(58 / var(--design-w) * 100%);
   aspect-ratio: 1;
   left: calc(240 / var(--design-w) * 100%);
@@ -105,9 +108,7 @@
   );
 }
 
-/* --- Иллюстрации: блок 0–556px в макете --- */
-
-.onboarding__hero {
+.welcome__hero {
   position: relative;
   z-index: 1;
   min-height: 0;
@@ -117,14 +118,14 @@
   justify-content: center;
 }
 
-.onboarding__scene {
+.welcome__scene {
   position: relative;
   flex: 0 0 auto;
   width: 100%;
   aspect-ratio: 375 / 556;
 }
 
-.onboarding__illustration {
+.welcome__illustration {
   position: absolute;
   z-index: 1;
   display: block;
@@ -134,104 +135,102 @@
   user-select: none;
 }
 
-.onboarding__illustration--female {
+.welcome__illustration--female {
   width: calc(159 / var(--design-w) * 100%);
   left: calc(131 / var(--design-w) * 100%);
   top: calc(147 / var(--hero-h) * 100%);
 }
 
-.onboarding__illustration--stopwatch {
+.welcome__illustration--stopwatch {
   width: calc(40 / var(--design-w) * 100%);
   left: calc(104 / var(--design-w) * 100%);
   top: calc(69 / var(--hero-h) * 100%);
 }
 
-.onboarding__illustration--calendar {
+.welcome__illustration--calendar {
   width: calc(31.35 / var(--design-w) * 100%);
   left: calc(276 / var(--design-w) * 100%);
   top: calc(136 / var(--hero-h) * 100%);
   transform: rotate(12.86deg);
 }
 
-.onboarding__illustration--pie {
+.welcome__illustration--pie {
   width: calc(26 / var(--design-w) * 100%);
   left: calc(84 / var(--design-w) * 100%);
   top: calc(180 / var(--hero-h) * 100%);
 }
 
-.onboarding__illustration--notifications {
+.welcome__illustration--notifications {
   width: calc(62 / var(--design-w) * 100%);
   left: calc(245 / var(--design-w) * 100%);
   top: calc(225 / var(--hero-h) * 100%);
 }
 
-.onboarding__illustration--vase {
+.welcome__illustration--vase {
   width: calc(36 / var(--design-w) * 100%);
   left: calc(79 / var(--design-w) * 100%);
   top: calc(279 / var(--hero-h) * 100%);
 }
 
-.onboarding__illustration--coffee {
+.welcome__illustration--coffee {
   width: calc(18 / var(--design-w) * 100%);
   left: calc(67 / var(--design-w) * 100%);
   top: calc(310 / var(--hero-h) * 100%);
 }
 
-/* --- Декоративные точки --- */
-
-.onboarding__dot {
+.welcome__dot {
   position: absolute;
   border-radius: 50%;
   z-index: 2;
 }
 
-.onboarding__dot--8 {
+.welcome__dot--8 {
   width: calc(8 / var(--design-w) * 100%);
   aspect-ratio: 1;
 }
 
-.onboarding__dot--4 {
+.welcome__dot--4 {
   width: calc(4 / var(--design-w) * 100%);
   aspect-ratio: 1;
 }
 
-.onboarding__dot--blue {
+.welcome__dot--blue {
   left: calc(252 / var(--design-w) * 100%);
   top: calc(73 / var(--hero-h) * 100%);
   background: #92deff;
 }
 
-.onboarding__dot--purple {
+.welcome__dot--purple {
   left: calc(202 / var(--design-w) * 100%);
   top: calc(92 / var(--hero-h) * 100%);
   background: #be9fff;
 }
 
-.onboarding__dot--yellow {
+.welcome__dot--yellow {
   left: calc(250 / var(--design-w) * 100%);
   top: calc(383 / var(--hero-h) * 100%);
   background: #eaed2a;
 }
 
-.onboarding__dot--green {
+.welcome__dot--green {
   left: calc(281 / var(--design-w) * 100%);
   top: calc(362 / var(--hero-h) * 100%);
   background: #7ffcaa;
 }
 
-.onboarding__dot--pink {
+.welcome__dot--pink {
   left: calc(138 / var(--design-w) * 100%);
   top: calc(391 / var(--hero-h) * 100%);
   background: #ffd7e4;
 }
 
-.onboarding__dot--sky {
+.welcome__dot--sky {
   left: calc(176 / var(--design-w) * 100%);
   top: calc(405 / var(--hero-h) * 100%);
   background: #a4e7f9;
 }
 
-.onboarding__svg-defs {
+.welcome__svg-defs {
   position: absolute;
   width: 0;
   height: 0;
@@ -239,9 +238,7 @@
   pointer-events: none;
 }
 
-/* --- Текст и кнопка: y=556–812 в макете --- */
-
-.onboarding__content {
+.welcome__content {
   position: relative;
   z-index: 1;
   height: 100%;
@@ -256,52 +253,54 @@
     max(4.5625rem, env(safe-area-inset-bottom, 0px));
 }
 
-/* Короткие экраны: hero сжимается, фон остаётся на всю страницу */
+.welcome--login .welcome__content {
+  padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px));
+}
+
 @media (max-height: 46rem) {
-  .onboarding {
+  .welcome {
     grid-template-rows: minmax(0, 1fr) minmax(0, auto);
   }
 
-  .onboarding__content {
+  .welcome__content {
     padding-bottom: max(2.5rem, env(safe-area-inset-bottom, 0px));
   }
 
-  .onboarding__description {
+  .welcome__description {
     margin-bottom: 1.75rem;
   }
 }
 
 @media (max-height: 32.5rem) {
-  .onboarding__title {
+  .welcome__title {
     font-size: 1.25rem;
   }
 
-  .onboarding__description {
+  .welcome__description {
     margin-bottom: 1rem;
     font-size: 0.8125rem;
   }
 
-  .onboarding__content {
+  .welcome__content {
     padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
   }
-
 }
 
 @media (max-height: 43.75rem) {
-  .onboarding__content {
+  .welcome__content {
     padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
   }
 
-  .onboarding__title {
+  .welcome__title {
     margin-bottom: 0.25rem;
   }
 
-  .onboarding__description {
+  .welcome__description {
     margin-bottom: 1.25rem;
   }
 }
 
-.onboarding__title {
+.welcome__title {
   margin: 0 0 0.4375rem;
   font-family: 'Lexend Deca', system-ui, sans-serif;
   font-weight: 600;
@@ -311,7 +310,11 @@
   color: var(--color-black);
 }
 
-.onboarding__description {
+.welcome--login .welcome__title {
+  margin-bottom: 1.25rem;
+}
+
+.welcome__description {
   margin: 0 0 2.5rem;
   width: min(16.625rem, 100%);
   font-family: 'Lexend Deca', system-ui, sans-serif;
@@ -322,11 +325,11 @@
   color: var(--color-secondary);
 }
 
-.onboarding__description-line {
+.welcome__description-line {
   display: block;
 }
 
-.onboarding__cta {
+.welcome__cta {
   position: relative;
   z-index: 2;
   width: 100%;
@@ -336,7 +339,7 @@
   overflow: visible;
 }
 
-.onboarding__button-shadow {
+.welcome__button-shadow {
   position: absolute;
   left: calc(12 / 331 * 100%);
   right: calc(12 / 331 * 100%);
@@ -347,7 +350,7 @@
   filter: blur(15px);
 }
 
-.onboarding__button {
+.welcome__button {
   position: relative;
   display: block;
   width: 100%;
@@ -356,20 +359,20 @@
   border: none;
   border-radius: calc(var(--btn-radius) / var(--design-w) * 100cqw);
   background: var(--color-primary);
-  clip-path: url(#onboarding-button-shape);
+  clip-path: url(#welcome-button-shape);
   cursor: pointer;
   transition: opacity 0.15s ease;
 }
 
-.onboarding__button:hover {
+.welcome__button:hover {
   opacity: 0.92;
 }
 
-.onboarding__button:active {
+.welcome__button:active {
   opacity: 0.85;
 }
 
-.onboarding__button-label {
+.welcome__button-label {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -381,7 +384,7 @@
   color: #ffffff;
 }
 
-.onboarding__button-arrow {
+.welcome__button-arrow {
   position: absolute;
   top: 50%;
   right: calc(22 / 331 * 100%);
