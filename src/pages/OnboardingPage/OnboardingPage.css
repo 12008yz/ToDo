@@ -303,14 +303,17 @@
 
 .onboarding__description {
   margin: 0 0 2.5rem;
-  width: calc(266 / var(--design-w) * 100%);
-  max-width: 16.625rem;
+  width: min(16.625rem, 100%);
   font-family: 'Lexend Deca', system-ui, sans-serif;
   font-weight: 400;
-  font-size: clamp(0.8125rem, 3.73cqw, 1rem);
+  font-size: 0.875rem;
   line-height: calc(18 / 14);
   text-align: center;
   color: var(--color-secondary);
+}
+
+.onboarding__description-line {
+  display: block;
 }
 
 .onboarding__cta {

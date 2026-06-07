@@ -111,8 +111,15 @@ export function OnboardingPage() {
       <div className="onboarding__content">
         <h1 className="onboarding__title">Task Sync</h1>
         <p className="onboarding__description">
-          This productive tool is designed to help you better manage your task
-          project-wise conveniently!
+          <span className="onboarding__description-line">
+            This productive tool is designed to help
+          </span>
+          <span className="onboarding__description-line">
+            you better manage your task
+          </span>
+          <span className="onboarding__description-line">
+            project-wise conveniently!
+          </span>
         </p>
 
         <div className="onboarding__cta">
