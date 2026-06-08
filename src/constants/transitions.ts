@@ -18,6 +18,9 @@ export const ICON_TRANSITION_MS =
 
 export const CONTENT_TRANSITION_DURATION_MS = 350
 
+/** Crossfade Login ↔ Registration; fixed 350ms (not the mobile-extended content duration). */
+export const AUTH_PANEL_CROSSFADE_MS = 350
+
 export type IconTransition = 'idle' | 'exit-up' | 'enter-from-bottom'
 
 export type IconAnimationPhase = 'exit' | 'enter'

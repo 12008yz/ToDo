@@ -17,6 +17,53 @@
   pointer-events: none;
 }
 
+.login__panel--inactive {
+  position: absolute;
+  inset: auto 0 0;
+  width: 100%;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.login__panel--fade-out,
+.login__panel--fade-in {
+  /* Keep in sync with AUTH_PANEL_CROSSFADE_MS in constants/transitions.ts */
+  transition: opacity 350ms ease;
+}
+
+.login__panel--fade-out {
+  position: absolute;
+  inset: auto 0 0;
+  width: 100%;
+  opacity: 1;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login__panel--fade-out.login__panel--fade-active {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.login__panel--fade-in {
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.login__panel--fade-in.login__panel--fade-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login__panel--fade-out,
+  .login__panel--fade-in {
+    transition: none;
+  }
+}
+
 .login__fields {
   display: flex;
   flex-direction: column;
@@ -40,6 +87,11 @@
   font-size: 1rem;
   line-height: 1.875rem;
   color: #24252c;
+}
+
+.login__field::placeholder {
+  color: #6e6a7c;
+  opacity: 1;
 }
 
 .login__field:focus {

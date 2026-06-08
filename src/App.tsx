@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { WelcomeLayout } from './components/WelcomeLayout'
 import { OnboardingPage } from './pages/OnboardingPage'
-import { LoginPage } from './pages/LoginPage'
+import { AuthPanels } from './components/AuthPanels'
 import type { IconAnimationPhase, IconTransition } from './constants/transitions'
 import './App.css'
 
@@ -58,10 +58,9 @@ function App() {
           {!isLogin ? (
             <OnboardingPage onStart={handleStart} disabled={isTransitioning} />
           ) : null}
-          <LoginPage
+          <AuthPanels
             prehidden={!isLogin}
             showContent={showLoginContent}
-            onRegistration={() => {}}
           />
         </div>
       </WelcomeLayout>

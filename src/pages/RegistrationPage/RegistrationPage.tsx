@@ -1,22 +1,22 @@
 import type { PanelVisualState } from '../../components/AuthPanels'
 import { PrimaryButton } from '../../components/PrimaryButton'
-import './LoginPage.css'
+import '../LoginPage/LoginPage.css'
 
-type LoginPageProps = {
+type RegistrationPageProps = {
   showContent?: boolean
   prehidden?: boolean
   panelState?: PanelVisualState
   fadeActive?: boolean
-  onRegistration?: () => void
+  onLogin?: () => void
 }
 
-export function LoginPage({
+export function RegistrationPage({
   showContent = true,
   prehidden = false,
   panelState = 'visible',
   fadeActive = false,
-  onRegistration,
-}: LoginPageProps) {
+  onLogin,
+}: RegistrationPageProps) {
   const interactive =
     showContent &&
     !prehidden &&
@@ -37,10 +37,10 @@ export function LoginPage({
 
   return (
     <div className={panelClassName} aria-hidden={!interactive}>
-      <h1 className="welcome__title">Login</h1>
+      <h1 className="welcome__title">Registration</h1>
 
       <form
-        id="login-form"
+        id="registration-form"
         className="login__fields"
         onSubmit={(event) => event.preventDefault()}
       >
@@ -57,24 +57,24 @@ export function LoginPage({
           className="login__field"
           type="password"
           name="password"
-          autoComplete="current-password"
+          autoComplete="new-password"
           placeholder="Password"
           aria-label="Password"
           tabIndex={interactive ? 0 : -1}
         />
       </form>
 
-      <PrimaryButton type="submit" form="login-form" tabIndex={interactive ? 0 : -1}>
+      <PrimaryButton type="submit" form="registration-form" tabIndex={interactive ? 0 : -1}>
         Enter
       </PrimaryButton>
 
       <button
         type="button"
         className="login__link"
-        onClick={onRegistration}
+        onClick={onLogin}
         tabIndex={interactive ? 0 : -1}
       >
-        Registration
+        Login
       </button>
     </div>
   )
