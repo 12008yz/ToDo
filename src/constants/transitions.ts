@@ -18,8 +18,24 @@ export const ICON_TRANSITION_MS =
 
 export const CONTENT_TRANSITION_DURATION_MS = 350
 
-/** Crossfade Login ↔ Registration; fixed 350ms (not the mobile-extended content duration). */
-export const AUTH_PANEL_CROSSFADE_MS = 350
+export function getContentTransitionDurationMs(): number {
+  const welcome = document.querySelector('.welcome')
+  const raw = welcome
+    ? getComputedStyle(welcome).getPropertyValue('--content-transition-duration').trim()
+    : ''
+
+  if (raw.endsWith('ms')) {
+    const parsed = Number.parseFloat(raw)
+    return Number.isFinite(parsed) ? parsed : CONTENT_TRANSITION_DURATION_MS
+  }
+
+  if (raw.endsWith('s')) {
+    const parsed = Number.parseFloat(raw)
+    return Number.isFinite(parsed) ? parsed * 1000 : CONTENT_TRANSITION_DURATION_MS
+  }
+
+  return CONTENT_TRANSITION_DURATION_MS
+}
 
 export type IconTransition = 'idle' | 'exit-up' | 'enter-from-bottom'
 

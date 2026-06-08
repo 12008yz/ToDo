@@ -5,28 +5,23 @@ import './LoginPage.css'
 type LoginPageProps = {
   showContent?: boolean
   panelState?: PanelVisualState
-  fadeActive?: boolean
+  exitActive?: boolean
   onRegistration?: () => void
 }
 
 export function LoginPage({
   showContent = true,
   panelState = 'visible',
-  fadeActive = false,
+  exitActive = false,
   onRegistration,
 }: LoginPageProps) {
-  const interactive =
-    showContent &&
-    (panelState === 'visible' || (panelState === 'fade-in' && fadeActive))
+  const interactive = showContent && panelState === 'visible'
 
   const panelClassName = [
     'login__panel',
     panelState === 'inactive' ? 'login__panel--inactive' : '',
-    panelState === 'fade-out' ? 'login__panel--fade-out' : '',
-    panelState === 'fade-in' ? 'login__panel--fade-in' : '',
-    fadeActive && (panelState === 'fade-out' || panelState === 'fade-in')
-      ? 'login__panel--fade-active'
-      : '',
+    panelState === 'exiting' ? 'login__panel--exiting' : '',
+    panelState === 'exiting' && exitActive ? 'login__panel--exit-active' : '',
   ]
     .filter(Boolean)
     .join(' ')

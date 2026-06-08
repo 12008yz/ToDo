@@ -5,6 +5,17 @@
   flex: 1;
   min-height: 0;
   align-self: stretch;
+  transition: opacity var(--content-transition-duration) ease;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+.auth-panels--enter-pending {
+  opacity: 0.01;
+  pointer-events: none;
+  transition: none;
 }
 
 .auth-panels--prehidden {

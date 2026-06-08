@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AUTH_PANEL_CROSSFADE_MS } from '../../constants/transitions'
+import { getContentTransitionDurationMs } from '../../constants/transitions'
 import { LoginPage } from '../../pages/LoginPage'
 import { RegistrationPage } from '../../pages/RegistrationPage'
+import { useContentEnterAnimation } from '../WelcomeLayout/useContentEnterAnimation'
 import './AuthPanels.css'
 
 export type AuthPanel = 'login' | 'registration'
 
-export type PanelVisualState = 'visible' | 'inactive' | 'fade-out' | 'fade-in'
+export type PanelVisualState = 'visible' | 'inactive' | 'exiting'
+
+type SwitchPhase = 'idle' | 'exiting' | 'entering'
 
 type AuthPanelsProps = {
   showContent: boolean
@@ -15,26 +18,28 @@ type AuthPanelsProps = {
 
 function getPanelState(
   panel: AuthPanel,
-  active: AuthPanel,
-  transition: { from: AuthPanel; to: AuthPanel } | null,
+  activePanel: AuthPanel,
+  switchPhase: SwitchPhase,
 ): PanelVisualState {
-  if (!transition) {
-    return active === panel ? 'visible' : 'inactive'
+  if (switchPhase === 'exiting') {
+    return panel === activePanel ? 'exiting' : 'inactive'
   }
 
-  if (panel === transition.from) return 'fade-out'
-  if (panel === transition.to) return 'fade-in'
-  return 'inactive'
+  return panel === activePanel ? 'visible' : 'inactive'
 }
 
 export function AuthPanels({ showContent, prehidden }: AuthPanelsProps) {
   const [activePanel, setActivePanel] = useState<AuthPanel>('login')
-  const [transition, setTransition] = useState<{
-    from: AuthPanel
-    to: AuthPanel
-  } | null>(null)
-  const [fadeActive, setFadeActive] = useState(false)
+  const [switchPhase, setSwitchPhase] = useState<SwitchPhase>('idle')
+  const [pendingPanel, setPendingPanel] = useState<AuthPanel | null>(null)
+  const [exitActive, setExitActive] = useState(false)
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const enterPending = useContentEnterAnimation(
+    wrapperRef,
+    switchPhase === 'entering',
+  )
 
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
@@ -43,43 +48,93 @@ export function AuthPanels({ showContent, prehidden }: AuthPanelsProps) {
     }
   }, [])
 
+  const finishEntering = useCallback(() => {
+    setSwitchPhase('idle')
+  }, [])
+
   const switchPanel = useCallback(
     (to: AuthPanel) => {
-      if (transition || activePanel === to || prehidden || !showContent) return
-      setFadeActive(false)
-      setTransition({ from: activePanel, to })
+      if (switchPhase !== 'idle' || activePanel === to || prehidden || !showContent) {
+        return
+      }
+
+      setPendingPanel(to)
+      setSwitchPhase('exiting')
     },
-    [activePanel, prehidden, showContent, transition],
+    [activePanel, prehidden, showContent, switchPhase],
   )
 
   useEffect(() => {
-    if (!transition) return
+    if (switchPhase !== 'exiting' || !pendingPanel) {
+      setExitActive(false)
+      return
+    }
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const duration = reducedMotion ? 0 : AUTH_PANEL_CROSSFADE_MS
+    const duration = reducedMotion ? 0 : getContentTransitionDurationMs()
 
-    const enterFrame = window.requestAnimationFrame(() => {
-      setFadeActive(true)
+    setExitActive(false)
+
+    let outerFrame = 0
+    let innerFrame = 0
+
+    outerFrame = window.requestAnimationFrame(() => {
+      innerFrame = window.requestAnimationFrame(() => {
+        setExitActive(true)
+      })
     })
 
     timerRef.current = setTimeout(() => {
-      setActivePanel(transition.to)
-      setTransition(null)
-      setFadeActive(false)
+      setActivePanel(pendingPanel)
+      setPendingPanel(null)
+      setExitActive(false)
+      setSwitchPhase('entering')
     }, duration)
 
     return () => {
-      window.cancelAnimationFrame(enterFrame)
+      window.cancelAnimationFrame(outerFrame)
+      window.cancelAnimationFrame(innerFrame)
       clearTimer()
     }
-  }, [clearTimer, transition])
+  }, [clearTimer, pendingPanel, switchPhase])
+
+  useEffect(() => {
+    if (switchPhase !== 'entering' || enterPending) return
+
+    const element = wrapperRef.current
+    if (!element) {
+      finishEntering()
+      return
+    }
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reducedMotion) {
+      finishEntering()
+      return
+    }
+
+    const onTransitionEnd = (event: TransitionEvent) => {
+      if (event.target !== element || event.propertyName !== 'opacity') return
+      finishEntering()
+    }
+
+    element.addEventListener('transitionend', onTransitionEnd)
+    timerRef.current = setTimeout(finishEntering, getContentTransitionDurationMs() + 50)
+
+    return () => {
+      element.removeEventListener('transitionend', onTransitionEnd)
+      clearTimer()
+    }
+  }, [clearTimer, enterPending, finishEntering, switchPhase])
 
   useEffect(() => {
     if (!prehidden) return
+
     clearTimer()
     setActivePanel('login')
-    setTransition(null)
-    setFadeActive(false)
+    setPendingPanel(null)
+    setExitActive(false)
+    setSwitchPhase('idle')
   }, [clearTimer, prehidden])
 
   useEffect(() => clearTimer, [clearTimer])
@@ -87,22 +142,23 @@ export function AuthPanels({ showContent, prehidden }: AuthPanelsProps) {
   const wrapperClassName = [
     'auth-panels',
     prehidden ? 'auth-panels--prehidden' : '',
+    enterPending ? 'auth-panels--enter-pending' : '',
   ]
     .filter(Boolean)
     .join(' ')
 
   return (
-    <div className={wrapperClassName}>
+    <div ref={wrapperRef} className={wrapperClassName}>
       <LoginPage
         showContent={showContent}
-        panelState={getPanelState('login', activePanel, transition)}
-        fadeActive={fadeActive}
+        panelState={getPanelState('login', activePanel, switchPhase)}
+        exitActive={exitActive}
         onRegistration={() => switchPanel('registration')}
       />
       <RegistrationPage
         showContent={showContent}
-        panelState={getPanelState('registration', activePanel, transition)}
-        fadeActive={fadeActive}
+        panelState={getPanelState('registration', activePanel, switchPhase)}
+        exitActive={exitActive}
         onLogin={() => switchPanel('login')}
       />
     </div>

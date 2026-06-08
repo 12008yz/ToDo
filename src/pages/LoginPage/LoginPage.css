@@ -16,37 +16,19 @@
   z-index: 0;
 }
 
-.login__panel--fade-out,
-.login__panel--fade-in {
-  /* Keep in sync with AUTH_PANEL_CROSSFADE_MS in constants/transitions.ts */
-  transition: opacity 350ms ease;
-}
-
-.login__panel--fade-out {
+.login__panel--exiting {
   opacity: 1;
-  z-index: 1;
   pointer-events: none;
-}
-
-.login__panel--fade-out.login__panel--fade-active {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.login__panel--fade-in {
-  opacity: 0;
   z-index: 2;
-  pointer-events: none;
+  transition: opacity var(--content-transition-duration) ease;
 }
 
-.login__panel--fade-in.login__panel--fade-active {
-  opacity: 1;
-  pointer-events: auto;
+.login__panel--exiting.login__panel--exit-active {
+  opacity: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .login__panel--fade-out,
-  .login__panel--fade-in {
+  .login__panel--exiting {
     transition: none;
   }
 }
