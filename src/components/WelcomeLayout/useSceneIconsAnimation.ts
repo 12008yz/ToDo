@@ -122,7 +122,9 @@ export function useSceneIconsAnimation({
   const onCompleteRef = useRef(onAnimationComplete)
   const runIdRef = useRef(0)
 
-  onCompleteRef.current = onAnimationComplete
+  useEffect(() => {
+    onCompleteRef.current = onAnimationComplete
+  }, [onAnimationComplete])
 
   useEffect(() => {
     if (iconTransition === 'idle') {

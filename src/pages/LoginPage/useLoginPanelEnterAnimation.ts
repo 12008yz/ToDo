@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
+import { flushSync } from 'react-dom'
 import {
   ICON_TRANSITION_EASING,
   LOGIN_PANEL_DELAY_MS,
@@ -39,15 +40,17 @@ export function useLoginPanelEnterAnimation(
   const runIdRef = useRef(0)
 
   useEffect(() => {
+    const elementAtStart = panelRef.current
+
     if (!active) {
-      setInteractive(false)
-      if (panelRef.current) clearPanelMotion(panelRef.current)
+      if (elementAtStart) clearPanelMotion(elementAtStart)
       return
     }
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      if (panelRef.current) clearPanelMotion(panelRef.current)
-      setInteractive(true)
+      if (elementAtStart) clearPanelMotion(elementAtStart)
+      // Defer state update to avoid setState-in-effect warnings.
+      requestAnimationFrame(() => setInteractive(true))
       return
     }
 
@@ -60,11 +63,12 @@ export function useLoginPanelEnterAnimation(
 
     const finish = (element: HTMLDivElement) => {
       if (cancelled || runId !== runIdRef.current) return
-      setInteractive(true)
-      requestAnimationFrame(() => {
-        if (cancelled || runId !== runIdRef.current) return
-        clearPanelMotion(element)
+      // Commit the resting CSS class before clearing inline motion styles.
+      // Otherwise opacity/transform reset one frame early and the panel jumps.
+      flushSync(() => {
+        setInteractive(true)
       })
+      clearPanelMotion(element)
     }
 
     const start = async () => {
@@ -119,14 +123,15 @@ export function useLoginPanelEnterAnimation(
       }
     }
 
-    setInteractive(false)
+    // Defer state reset to avoid setState synchronously within an effect.
+    requestAnimationFrame(() => setInteractive(false))
     tryStart()
 
     return () => {
       cancelled = true
       window.cancelAnimationFrame(retryFrame)
       window.clearTimeout(delayTimer)
-      const element = panelRef.current
+      const element = elementAtStart
       if (element && transitionListener) {
         element.removeEventListener('transitionend', transitionListener)
       }
@@ -134,5 +139,5 @@ export function useLoginPanelEnterAnimation(
     }
   }, [active, panelRef])
 
-  return interactive
+  return active ? interactive : false
 }

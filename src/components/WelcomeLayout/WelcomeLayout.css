@@ -33,7 +33,9 @@
 }
 
 .welcome--animating-icons {
-  container-type: normal;
+  /* Keep container query units stable while icons animate.
+     Button sizing uses `cqw`, so disabling container queries causes layout jumps (desktop). */
+  container-type: inline-size;
 }
 
 .welcome--animating-icons .welcome__hero {
