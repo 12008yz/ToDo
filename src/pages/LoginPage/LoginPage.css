@@ -9,21 +9,11 @@
   min-height: 0;
 }
 
-.login__panel--prehidden {
-  position: absolute;
-  inset: auto 0 0;
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-}
-
 .login__panel--inactive {
-  position: absolute;
-  inset: auto 0 0;
-  width: 100%;
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
+  z-index: 0;
 }
 
 .login__panel--fade-out,
@@ -33,9 +23,6 @@
 }
 
 .login__panel--fade-out {
-  position: absolute;
-  inset: auto 0 0;
-  width: 100%;
   opacity: 1;
   z-index: 1;
   pointer-events: none;

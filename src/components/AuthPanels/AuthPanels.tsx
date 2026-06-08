@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AUTH_PANEL_CROSSFADE_MS } from '../../constants/transitions'
 import { LoginPage } from '../../pages/LoginPage'
 import { RegistrationPage } from '../../pages/RegistrationPage'
+import './AuthPanels.css'
 
 export type AuthPanel = 'login' | 'registration'
 
@@ -83,22 +84,27 @@ export function AuthPanels({ showContent, prehidden }: AuthPanelsProps) {
 
   useEffect(() => clearTimer, [clearTimer])
 
+  const wrapperClassName = [
+    'auth-panels',
+    prehidden ? 'auth-panels--prehidden' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   return (
-    <>
+    <div className={wrapperClassName}>
       <LoginPage
         showContent={showContent}
-        prehidden={prehidden}
         panelState={getPanelState('login', activePanel, transition)}
         fadeActive={fadeActive}
         onRegistration={() => switchPanel('registration')}
       />
       <RegistrationPage
         showContent={showContent}
-        prehidden={prehidden}
         panelState={getPanelState('registration', activePanel, transition)}
         fadeActive={fadeActive}
         onLogin={() => switchPanel('login')}
       />
-    </>
+    </div>
   )
 }

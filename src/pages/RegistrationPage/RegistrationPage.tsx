@@ -4,7 +4,6 @@ import '../LoginPage/LoginPage.css'
 
 type RegistrationPageProps = {
   showContent?: boolean
-  prehidden?: boolean
   panelState?: PanelVisualState
   fadeActive?: boolean
   onLogin?: () => void
@@ -12,19 +11,16 @@ type RegistrationPageProps = {
 
 export function RegistrationPage({
   showContent = true,
-  prehidden = false,
   panelState = 'visible',
   fadeActive = false,
   onLogin,
 }: RegistrationPageProps) {
   const interactive =
     showContent &&
-    !prehidden &&
     (panelState === 'visible' || (panelState === 'fade-in' && fadeActive))
 
   const panelClassName = [
     'login__panel',
-    prehidden ? 'login__panel--prehidden' : '',
     panelState === 'inactive' ? 'login__panel--inactive' : '',
     panelState === 'fade-out' ? 'login__panel--fade-out' : '',
     panelState === 'fade-in' ? 'login__panel--fade-in' : '',

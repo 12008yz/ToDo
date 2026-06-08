@@ -368,7 +368,12 @@
   }
 }
 
-.welcome--login .login__panel {
+.welcome--login .auth-panels {
+  flex: 1;
+  min-height: 0;
+}
+
+.welcome--login .auth-panels > .login__panel {
   flex: 1;
   min-height: 0;
 }
