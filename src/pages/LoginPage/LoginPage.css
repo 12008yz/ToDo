@@ -9,17 +9,20 @@
   min-height: 0;
   opacity: 0;
   pointer-events: none;
+  transition: opacity var(--content-transition-duration, 350ms) ease;
+}
+
+.login__panel--visible {
+  opacity: 1;
 }
 
 .login__panel--interactive {
-  opacity: 1;
   pointer-events: auto;
-  transform: translateZ(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .login__panel--interactive {
-    opacity: 1;
+  .login__panel {
+    transition: none;
   }
 }
 

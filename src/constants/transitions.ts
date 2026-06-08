@@ -16,9 +16,7 @@ export const ICON_TRANSITION_EASING = 'cubic-bezier(0.22, 1, 0.36, 1)'
 export const ICON_TRANSITION_MS =
   (FLOAT_ITEM_COUNT - 1) * ICON_ITEM_STAGGER_MS + ICON_ITEM_DURATION_MS
 
-export const LOGIN_PANEL_DELAY_MS = 350
-export const LOGIN_PANEL_DURATION_MS = 1000
-export const LOGIN_PANEL_TRAVEL_PX = 56
+export const CONTENT_TRANSITION_DURATION_MS = 350
 
 export type IconTransition = 'idle' | 'exit-up' | 'enter-from-bottom'
 

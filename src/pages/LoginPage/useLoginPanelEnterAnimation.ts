@@ -1,143 +1,64 @@
-import { useEffect, useRef, useState, type RefObject } from 'react'
-import { flushSync } from 'react-dom'
-import {
-  ICON_TRANSITION_EASING,
-  LOGIN_PANEL_DELAY_MS,
-  LOGIN_PANEL_DURATION_MS,
-  LOGIN_PANEL_TRAVEL_PX,
-} from '../../constants/transitions'
+import { useCallback, useEffect, useRef, useState, type TransitionEvent } from 'react'
+import { CONTENT_TRANSITION_DURATION_MS } from '../../constants/transitions'
 
-function setTransformY(element: HTMLElement, y: number) {
-  const value = `translate3d(0, ${y}px, 0.01px)`
-  element.style.transform = value
-  element.style.webkitTransform = value
-}
-
-function clearPanelMotion(element: HTMLElement) {
-  element.style.transition = ''
-  element.style.webkitTransition = ''
-  element.style.transform = ''
-  element.style.webkitTransform = ''
-  element.style.opacity = ''
-  element.style.visibility = ''
-  element.style.willChange = ''
-  element.removeAttribute('data-motion-active')
-}
-
-function waitTwoFrames(): Promise<void> {
-  return new Promise((resolve) => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => resolve())
-    })
-  })
-}
-
-export function useLoginPanelEnterAnimation(
-  panelRef: RefObject<HTMLDivElement | null>,
-  active: boolean,
-): boolean {
+export function useLoginPanelEnterAnimation(active: boolean): {
+  visible: boolean
+  interactive: boolean
+  onTransitionEnd: (event: TransitionEvent<HTMLDivElement>) => void
+} {
+  const [visible, setVisible] = useState(false)
   const [interactive, setInteractive] = useState(false)
   const runIdRef = useRef(0)
 
   useEffect(() => {
-    const elementAtStart = panelRef.current
+    const runId = ++runIdRef.current
+    let frame = 0
+    let finishTimer = 0
+
+    const reset = () => {
+      if (runId !== runIdRef.current) return
+      setVisible(false)
+      setInteractive(false)
+    }
 
     if (!active) {
-      if (elementAtStart) clearPanelMotion(elementAtStart)
-      return
+      frame = window.requestAnimationFrame(reset)
+      return () => window.cancelAnimationFrame(frame)
     }
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      if (elementAtStart) clearPanelMotion(elementAtStart)
-      // Defer state update to avoid setState-in-effect warnings.
-      requestAnimationFrame(() => setInteractive(true))
-      return
-    }
+    const start = () => {
+      if (runId !== runIdRef.current) return
+      setVisible(true)
 
-    const runId = ++runIdRef.current
-    let delayTimer = 0
-    let retryFrame = 0
-    let started = false
-    let cancelled = false
-    let transitionListener: ((event: TransitionEvent) => void) | null = null
-
-    const finish = (element: HTMLDivElement) => {
-      if (cancelled || runId !== runIdRef.current) return
-      // Commit the resting CSS class before clearing inline motion styles.
-      // Otherwise opacity/transform reset one frame early and the panel jumps.
-      flushSync(() => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         setInteractive(true)
-      })
-      clearPanelMotion(element)
-    }
-
-    const start = async () => {
-      if (started || cancelled || runId !== runIdRef.current) return
-
-      const element = panelRef.current
-      if (!element) return
-
-      started = true
-      await waitTwoFrames()
-      if (cancelled || runId !== runIdRef.current || !panelRef.current) return
-
-      element.setAttribute('data-motion-active', 'true')
-      element.style.willChange = 'opacity, transform'
-      element.style.visibility = 'hidden'
-      element.style.transition = 'none'
-      element.style.webkitTransition = 'none'
-      element.style.opacity = '0'
-      setTransformY(element, LOGIN_PANEL_TRAVEL_PX)
-      void element.offsetHeight
-
-      delayTimer = window.setTimeout(() => {
-        if (cancelled || runId !== runIdRef.current || !panelRef.current) return
-
-        const el = panelRef.current
-        el.style.visibility = 'visible'
-        const transition = `opacity ${LOGIN_PANEL_DURATION_MS}ms ${ICON_TRANSITION_EASING}, transform ${LOGIN_PANEL_DURATION_MS}ms ${ICON_TRANSITION_EASING}`
-        el.style.transition = transition
-        el.style.webkitTransition = transition
-        void el.offsetHeight
-
-        el.style.opacity = '1'
-        setTransformY(el, 0)
-
-        transitionListener = (event: TransitionEvent) => {
-          if (event.target !== el || event.propertyName !== 'transform') return
-          el.removeEventListener('transitionend', transitionListener!)
-          transitionListener = null
-          finish(el)
-        }
-        el.addEventListener('transitionend', transitionListener)
-      }, LOGIN_PANEL_DELAY_MS)
-    }
-
-    const tryStart = (attempt = 0) => {
-      if (cancelled || runId !== runIdRef.current) return
-
-      void start()
-
-      if (!started && attempt < 20) {
-        retryFrame = window.requestAnimationFrame(() => tryStart(attempt + 1))
+        return
       }
+
+      finishTimer = window.setTimeout(() => {
+        if (runId !== runIdRef.current) return
+        setInteractive(true)
+      }, CONTENT_TRANSITION_DURATION_MS)
     }
 
-    // Defer state reset to avoid setState synchronously within an effect.
-    requestAnimationFrame(() => setInteractive(false))
-    tryStart()
+    frame = window.requestAnimationFrame(() => {
+      frame = window.requestAnimationFrame(start)
+    })
 
     return () => {
-      cancelled = true
-      window.cancelAnimationFrame(retryFrame)
-      window.clearTimeout(delayTimer)
-      const element = elementAtStart
-      if (element && transitionListener) {
-        element.removeEventListener('transitionend', transitionListener)
-      }
-      if (element) clearPanelMotion(element)
+      window.cancelAnimationFrame(frame)
+      window.clearTimeout(finishTimer)
     }
-  }, [active, panelRef])
+  }, [active])
 
-  return active ? interactive : false
+  const onTransitionEnd = useCallback((event: TransitionEvent<HTMLDivElement>) => {
+    if (event.propertyName !== 'opacity' || event.target !== event.currentTarget) return
+    setInteractive(true)
+  }, [])
+
+  return {
+    visible: active && visible,
+    interactive: active && interactive,
+    onTransitionEnd,
+  }
 }
