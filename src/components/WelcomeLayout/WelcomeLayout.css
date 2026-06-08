@@ -321,6 +321,15 @@
   pointer-events: none;
 }
 
+.welcome__page-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
 .welcome__content {
   position: relative;
   z-index: 1;

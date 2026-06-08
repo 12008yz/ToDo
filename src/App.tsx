@@ -51,11 +51,16 @@ function App() {
         contentHidden={contentHidden}
         onIconsAnimationComplete={handleIconsAnimationComplete}
       >
-        {isLogin ? (
-          <LoginPage showContent={showLoginContent} onRegistration={() => {}} />
-        ) : (
-          <OnboardingPage onStart={handleStart} disabled={isTransitioning} />
-        )}
+        <div className="welcome__page-stack">
+          {!isLogin ? (
+            <OnboardingPage onStart={handleStart} disabled={isTransitioning} />
+          ) : null}
+          <LoginPage
+            prehidden={!isLogin}
+            showContent={showLoginContent}
+            onRegistration={() => {}}
+          />
+        </div>
       </WelcomeLayout>
     </main>
   )

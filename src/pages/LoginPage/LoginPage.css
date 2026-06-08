@@ -7,22 +7,34 @@
   width: 100%;
   flex: 1;
   min-height: 0;
-  opacity: 0;
+  opacity: 0.01;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity var(--content-transition-duration, 350ms) ease;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  isolation: isolate;
 }
 
-.login__panel--visible {
-  opacity: 1;
+.login__panel[data-motion-active] {
+  visibility: visible;
+}
+
+.login__panel--prehidden {
+  display: none !important;
 }
 
 .login__panel--interactive {
+  opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .login__panel {
-    transition: none;
+  .login__panel--interactive {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
@@ -49,6 +61,8 @@
   font-size: 0.875rem;
   line-height: 1.875rem;
   color: #24252c;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .login__field:focus {
@@ -101,4 +115,3 @@
     margin-top: 1rem;
   }
 }
-

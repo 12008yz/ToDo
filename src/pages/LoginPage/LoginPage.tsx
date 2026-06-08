@@ -1,27 +1,36 @@
+import { useRef } from 'react'
 import { PrimaryButton } from '../../components/PrimaryButton'
 import { useLoginPanelEnterAnimation } from './useLoginPanelEnterAnimation'
 import './LoginPage.css'
 
 type LoginPageProps = {
   showContent?: boolean
+  prehidden?: boolean
   onRegistration?: () => void
 }
 
-export function LoginPage({ showContent = true, onRegistration }: LoginPageProps) {
-  const { visible, interactive, onTransitionEnd } =
-    useLoginPanelEnterAnimation(showContent)
+export function LoginPage({
+  showContent = true,
+  prehidden = false,
+  onRegistration,
+}: LoginPageProps) {
+  const panelRef = useRef<HTMLDivElement>(null)
+  const interactive = useLoginPanelEnterAnimation(
+    panelRef,
+    showContent && !prehidden,
+  )
 
   return (
     <div
+      ref={panelRef}
       className={[
         'login__panel',
-        visible ? 'login__panel--visible' : '',
+        prehidden ? 'login__panel--prehidden' : '',
         interactive ? 'login__panel--interactive' : '',
       ]
         .filter(Boolean)
         .join(' ')}
       aria-hidden={!interactive}
-      onTransitionEnd={onTransitionEnd}
     >
       <h1 className="welcome__title">Login</h1>
 
