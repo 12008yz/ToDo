@@ -15,8 +15,6 @@
   --float-item-count: 12;
   --icon-transition-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --content-transition-duration: 350ms;
-  --login-panel-delay: 400ms;
-  --login-panel-duration: 750ms;
   --icon-travel: 120vh;
 
   position: relative;
@@ -340,6 +338,7 @@
 .welcome--login .welcome__content {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  transition: none;
 }
 
 .welcome--login .login__panel {

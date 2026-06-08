@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useRef } from 'react'
 import { PrimaryButton } from '../../components/PrimaryButton'
+import { useLoginPanelEnterAnimation } from './useLoginPanelEnterAnimation'
 import './LoginPage.css'
 
 type LoginPageProps = {
@@ -8,38 +9,13 @@ type LoginPageProps = {
 }
 
 export function LoginPage({ showContent = true, onRegistration }: LoginPageProps) {
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    if (!showContent) {
-      setVisible(false)
-      return
-    }
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setVisible(true)
-      return
-    }
-
-    let cancelled = false
-
-    requestAnimationFrame(() => {
-      if (cancelled) return
-      requestAnimationFrame(() => {
-        if (!cancelled) setVisible(true)
-      })
-    })
-
-    return () => {
-      cancelled = true
-    }
-  }, [showContent])
-
-  const interactive = showContent && visible
+  const panelRef = useRef<HTMLDivElement>(null)
+  const interactive = useLoginPanelEnterAnimation(panelRef, showContent)
 
   return (
     <div
-      className={`login__panel${visible ? ' login__panel--visible' : ''}`}
+      ref={panelRef}
+      className={`login__panel${interactive ? ' login__panel--interactive' : ''}`}
       aria-hidden={!interactive}
     >
       <h1 className="welcome__title">Login</h1>
