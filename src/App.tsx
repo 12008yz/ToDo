@@ -43,12 +43,15 @@ function App() {
     isLogin &&
     (transitionPhase === 'entering-icons' || transitionPhase === 'idle')
 
+  const contentEntering = isLogin && transitionPhase === 'entering-icons'
+
   return (
     <main className="app">
       <WelcomeLayout
         variant={isLogin ? 'login' : 'default'}
         iconTransition={iconTransition}
         contentHidden={contentHidden}
+        contentEntering={contentEntering}
         onIconsAnimationComplete={handleIconsAnimationComplete}
       >
         <div className="welcome__page-stack">

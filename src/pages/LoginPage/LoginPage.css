@@ -7,35 +7,14 @@
   width: 100%;
   flex: 1;
   min-height: 0;
-  opacity: 0.01;
-  visibility: hidden;
-  pointer-events: none;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-  isolation: isolate;
-}
-
-.login__panel[data-motion-active] {
-  visibility: visible;
 }
 
 .login__panel--prehidden {
-  display: none !important;
-}
-
-.login__panel--interactive {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .login__panel--interactive {
-    opacity: 1;
-    visibility: visible;
-  }
+  position: absolute;
+  inset: auto 0 0;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .login__fields {
@@ -61,8 +40,6 @@
   font-size: 0.875rem;
   line-height: 1.875rem;
   color: #24252c;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
 }
 
 .login__field:focus {

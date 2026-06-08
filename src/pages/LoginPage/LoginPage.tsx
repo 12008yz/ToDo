@@ -1,6 +1,4 @@
-import { useRef } from 'react'
 import { PrimaryButton } from '../../components/PrimaryButton'
-import { useLoginPanelEnterAnimation } from './useLoginPanelEnterAnimation'
 import './LoginPage.css'
 
 type LoginPageProps = {
@@ -14,23 +12,17 @@ export function LoginPage({
   prehidden = false,
   onRegistration,
 }: LoginPageProps) {
-  const panelRef = useRef<HTMLDivElement>(null)
-  const interactive = useLoginPanelEnterAnimation(
-    panelRef,
-    showContent && !prehidden,
-  )
+  const visible = showContent && !prehidden
 
   return (
     <div
-      ref={panelRef}
       className={[
         'login__panel',
         prehidden ? 'login__panel--prehidden' : '',
-        interactive ? 'login__panel--interactive' : '',
       ]
         .filter(Boolean)
         .join(' ')}
-      aria-hidden={!interactive}
+      aria-hidden={!visible}
     >
       <h1 className="welcome__title">Login</h1>
 
@@ -45,7 +37,7 @@ export function LoginPage({
           name="email"
           autoComplete="email"
           aria-label="Email"
-          tabIndex={interactive ? 0 : -1}
+          tabIndex={visible ? 0 : -1}
         />
         <input
           className="login__field"
@@ -53,11 +45,11 @@ export function LoginPage({
           name="password"
           autoComplete="current-password"
           aria-label="Password"
-          tabIndex={interactive ? 0 : -1}
+          tabIndex={visible ? 0 : -1}
         />
       </form>
 
-      <PrimaryButton type="submit" form="login-form" tabIndex={interactive ? 0 : -1}>
+      <PrimaryButton type="submit" form="login-form" tabIndex={visible ? 0 : -1}>
         Enter
       </PrimaryButton>
 
@@ -65,7 +57,7 @@ export function LoginPage({
         type="button"
         className="login__link"
         onClick={onRegistration}
-        tabIndex={interactive ? 0 : -1}
+        tabIndex={visible ? 0 : -1}
       >
         Registration
       </button>

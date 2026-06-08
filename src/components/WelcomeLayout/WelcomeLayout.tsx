@@ -1,6 +1,7 @@
 import { useRef, type ReactNode } from 'react'
 import type { IconAnimationPhase, IconTransition } from '../../constants/transitions'
 import { FLOAT_ITEM_COUNT } from '../../constants/transitions'
+import { useContentEnterAnimation } from './useContentEnterAnimation'
 import { useSceneIconsAnimation } from './useSceneIconsAnimation'
 import './WelcomeLayout.css'
 
@@ -144,6 +145,7 @@ type WelcomeLayoutProps = {
   variant?: 'default' | 'login'
   iconTransition?: IconTransition
   contentHidden?: boolean
+  contentEntering?: boolean
   onIconsAnimationComplete?: (phase: IconAnimationPhase) => void
 }
 
@@ -152,11 +154,15 @@ export function WelcomeLayout({
   variant = 'default',
   iconTransition = 'idle',
   contentHidden = false,
+  contentEntering = false,
   onIconsAnimationComplete,
 }: WelcomeLayoutProps) {
+  const contentRef = useRef<HTMLDivElement>(null)
   const sceneItemsRef = useRef<(HTMLDivElement | null)[]>(
     Array.from({ length: FLOAT_ITEM_COUNT }, () => null),
   )
+
+  const contentEnterPending = useContentEnterAnimation(contentRef, contentEntering)
 
   useSceneIconsAnimation({
     iconTransition,
@@ -167,6 +173,7 @@ export function WelcomeLayout({
   const contentClassName = [
     'welcome__content',
     contentHidden ? 'welcome__content--hidden' : '',
+    contentEnterPending ? 'welcome__content--enter-pending' : '',
   ]
     .filter(Boolean)
     .join(' ')
@@ -222,7 +229,9 @@ export function WelcomeLayout({
         </div>
       </div>
 
-      <div className={contentClassName}>{children}</div>
+      <div ref={contentRef} className={contentClassName}>
+        {children}
+      </div>
     </div>
   )
 }

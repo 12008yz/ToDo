@@ -17,19 +17,6 @@ export const ICON_TRANSITION_MS =
   (FLOAT_ITEM_COUNT - 1) * ICON_ITEM_STAGGER_MS + ICON_ITEM_DURATION_MS
 
 export const CONTENT_TRANSITION_DURATION_MS = 350
-export const CONTENT_TRANSITION_DURATION_TOUCH_MS = 500
-
-export function getContentTransitionDurationMs(): number {
-  if (typeof window === 'undefined') {
-    return CONTENT_TRANSITION_DURATION_MS
-  }
-
-  if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
-    return CONTENT_TRANSITION_DURATION_TOUCH_MS
-  }
-
-  return CONTENT_TRANSITION_DURATION_MS
-}
 
 export type IconTransition = 'idle' | 'exit-up' | 'enter-from-bottom'
 
