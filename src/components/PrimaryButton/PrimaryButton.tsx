@@ -6,6 +6,7 @@ type PrimaryButtonProps = {
   form?: string
   onClick?: () => void
   disabled?: boolean
+  tabIndex?: number
 }
 
 function ArrowIcon() {
@@ -33,6 +34,7 @@ export function PrimaryButton({
   form,
   onClick,
   disabled,
+  tabIndex,
 }: PrimaryButtonProps) {
   return (
     <div className="welcome__cta">
@@ -43,6 +45,7 @@ export function PrimaryButton({
         className="welcome__button"
         onClick={onClick}
         disabled={disabled}
+        tabIndex={tabIndex}
       >
         <span className="welcome__button-label">{children}</span>
         <ArrowIcon />

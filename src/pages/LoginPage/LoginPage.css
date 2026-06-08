@@ -8,23 +8,28 @@
   flex: 1;
   min-height: 0;
   opacity: 0;
-  transform: translateY(0.5rem);
+  transform: translate3d(0, 1.25rem, 0);
+  -webkit-transform: translate3d(0, 1.25rem, 0);
   transition:
-    opacity var(--icon-item-duration, 900ms) var(--icon-transition-ease, ease),
-    transform var(--icon-item-duration, 900ms) var(--icon-transition-ease, ease);
+    opacity var(--login-panel-duration) var(--icon-transition-ease),
+    transform var(--login-panel-duration) var(--icon-transition-ease);
+  transition-delay: var(--login-panel-delay);
   pointer-events: none;
 }
 
 .login__panel--visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
   pointer-events: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .login__panel {
     transform: none;
+    -webkit-transform: none;
     transition: none;
+    transition-delay: 0ms;
   }
 
   .login__panel--visible {
