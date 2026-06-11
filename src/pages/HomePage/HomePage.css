@@ -1,4 +1,4 @@
-/* Home: Figma 375×812 — все размеры масштабируются через cqw */
+/* Home: Figma 375×812 — оболочка как .welcome, масштаб через cqw */
 
 .home {
   --design-w: 375;
@@ -16,9 +16,9 @@
   --s: calc(100cqw / var(--design-w));
 
   position: relative;
-  width: min(100%, calc(var(--design-w) * 1px));
+  width: min(100%, 26.875rem);
   height: 100%;
-  max-height: 100dvh;
+  max-height: 100%;
   margin-inline: auto;
   background: #ffffff;
   overflow: hidden;
