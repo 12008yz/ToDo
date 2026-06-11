@@ -1,11 +1,12 @@
 import { useCallback, useState } from 'react'
 import { WelcomeLayout } from './components/WelcomeLayout'
 import { OnboardingPage } from './pages/OnboardingPage'
+import { HomePage } from './pages/HomePage'
 import { AuthPanels } from './components/AuthPanels'
 import type { IconAnimationPhase, IconTransition } from './constants/transitions'
 import './App.css'
 
-type AppPage = 'onboarding' | 'login'
+type AppPage = 'onboarding' | 'login' | 'home'
 type TransitionPhase = 'idle' | 'exiting' | 'entering-icons'
 
 function App() {
@@ -45,6 +46,19 @@ function App() {
 
   const contentEntering = isLogin && transitionPhase === 'entering-icons'
 
+  const handleMockLogin = useCallback(() => {
+    setPage('home')
+    setTransitionPhase('idle')
+  }, [])
+
+  if (page === 'home') {
+    return (
+      <main className="app">
+        <HomePage />
+      </main>
+    )
+  }
+
   return (
     <main className="app">
       <WelcomeLayout
@@ -61,6 +75,7 @@ function App() {
           <AuthPanels
             prehidden={!isLogin}
             showContent={showLoginContent}
+            onEnter={handleMockLogin}
           />
         </div>
       </WelcomeLayout>

@@ -14,6 +14,7 @@ type SwitchPhase = 'idle' | 'exiting' | 'entering'
 type AuthPanelsProps = {
   showContent: boolean
   prehidden: boolean
+  onEnter?: () => void
 }
 
 function getPanelState(
@@ -28,7 +29,7 @@ function getPanelState(
   return panel === activePanel ? 'visible' : 'inactive'
 }
 
-export function AuthPanels({ showContent, prehidden }: AuthPanelsProps) {
+export function AuthPanels({ showContent, prehidden, onEnter }: AuthPanelsProps) {
   const [activePanel, setActivePanel] = useState<AuthPanel>('login')
   const [switchPhase, setSwitchPhase] = useState<SwitchPhase>('idle')
   const [pendingPanel, setPendingPanel] = useState<AuthPanel | null>(null)
@@ -63,6 +64,11 @@ export function AuthPanels({ showContent, prehidden }: AuthPanelsProps) {
     },
     [activePanel, prehidden, showContent, switchPhase],
   )
+
+  const handleEnter = useCallback(() => {
+    if (prehidden || !showContent || switchPhase !== 'idle') return
+    onEnter?.()
+  }, [onEnter, prehidden, showContent, switchPhase])
 
   useEffect(() => {
     if (switchPhase !== 'exiting' || !pendingPanel) {
@@ -154,12 +160,14 @@ export function AuthPanels({ showContent, prehidden }: AuthPanelsProps) {
         panelState={getPanelState('login', activePanel, switchPhase)}
         exitActive={exitActive}
         onRegistration={() => switchPanel('registration')}
+        onEnter={handleEnter}
       />
       <RegistrationPage
         showContent={showContent}
         panelState={getPanelState('registration', activePanel, switchPhase)}
         exitActive={exitActive}
         onLogin={() => switchPanel('login')}
+        onEnter={handleEnter}
       />
     </div>
   )

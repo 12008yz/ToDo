@@ -1,3 +1,4 @@
+import type { FormEvent } from 'react'
 import type { PanelVisualState } from '../../components/AuthPanels'
 import { PrimaryButton } from '../../components/PrimaryButton'
 import './LoginPage.css'
@@ -7,6 +8,7 @@ type LoginPageProps = {
   panelState?: PanelVisualState
   exitActive?: boolean
   onRegistration?: () => void
+  onEnter?: () => void
 }
 
 export function LoginPage({
@@ -14,8 +16,14 @@ export function LoginPage({
   panelState = 'visible',
   exitActive = false,
   onRegistration,
+  onEnter,
 }: LoginPageProps) {
   const interactive = showContent && panelState === 'visible'
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault()
+    if (interactive) onEnter?.()
+  }
 
   const panelClassName = [
     'login__panel',
@@ -33,7 +41,7 @@ export function LoginPage({
       <form
         id="login-form"
         className="login__fields"
-        onSubmit={(event) => event.preventDefault()}
+        onSubmit={handleSubmit}
       >
         <input
           className="login__field"
@@ -55,7 +63,12 @@ export function LoginPage({
         />
       </form>
 
-      <PrimaryButton type="submit" form="login-form" tabIndex={interactive ? 0 : -1}>
+      <PrimaryButton
+        type="submit"
+        form="login-form"
+        tabIndex={interactive ? 0 : -1}
+        disabled={!interactive}
+      >
         Enter
       </PrimaryButton>
 
