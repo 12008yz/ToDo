@@ -100,11 +100,17 @@
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   padding-top: calc(28 * var(--s));
   padding-left: calc(22 * var(--s));
   padding-right: calc(22 * var(--s));
   padding-bottom: calc(94 * var(--s) + env(safe-area-inset-bottom, 0px));
   -webkit-overflow-scrolling: touch;
+}
+
+.home__scroll::-webkit-scrollbar {
+  display: none;
 }
 
 /* --- Header (top 28) --- */
