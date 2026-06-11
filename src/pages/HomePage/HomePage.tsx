@@ -135,7 +135,7 @@ export function HomePage() {
       <nav className="home__navbar" aria-label="Main navigation">
         <div className="home__navbar-bar">
           <button type="button" className="home__nav-item home__nav-item--active" aria-label="Home">
-            <img src="/navbar/Home.svg" width={24} height={24} alt="" />
+            <img src="/navbar/home.svg" width={24} height={24} alt="" />
           </button>
           <button type="button" className="home__nav-item" aria-label="Calendar">
             <img src="/navbar/calendar.svg" width={24} height={24} alt="" />
